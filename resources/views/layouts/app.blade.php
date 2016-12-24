@@ -49,7 +49,7 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
                         <!-- Authentication Links -->
-                        @if (Auth::guest())
+                        @if (Auth::guest())OA
                             <li><a href="{{ url('/login') }}">Connexion</a></li>
                             <li><a href="{{ url('/register') }}">Inscription</a></li>
                         @else
@@ -59,13 +59,11 @@
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{{ route('account') }}">Mon compte</a></li>
+                                    <li><a href="{{ route('account.edit') }}">Mes informations</a></li>
+                                    <li><a href="{{ route('account.password') }}">Mon mot de passe</a></li>
                                     <li>
-                                        <a href="{{ url('/logout') }}"
-                                            onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                            Déconnexion
-                                        </a>
-
+                                        <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Déconnexion</a>
                                         <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
                                             {{ csrf_field() }}
                                         </form>
@@ -78,7 +76,9 @@
             </div>
         </nav>
 
-        @yield('content')
+        <div class="container">
+            @yield('content')
+        </div>
     </div>
 
     <!-- Scripts -->
