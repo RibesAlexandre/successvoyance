@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+//  Requests
 use App\Http\Requests\User\EditAccountRequest;
 use App\Http\Requests\User\EditPasswordRequest;
 use App\Http\Requests\User\EditPictureRequest;
-use App\Http\Requests\User\UserEditAccountRequest;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Intervention\Image\Image;
 
+use Image;
+use App\Models\User;
 use App\Http\Controllers\Controller;
 
 /**
@@ -50,7 +49,7 @@ class AccountController extends Controller
         Auth::user()->update($request->all());
         return response()->json([
             'success'   =>  true,
-            'content'   =>  view('components.infobox', ['type' => 'success', 'message' => 'Vos informations ont correctement été mises à jour'])->render()
+            'content'   =>  view('components.infobox', ['type' => 'success', 'message' => 'Vos informations ont correctement été mises à jour.'])->render()
         ]);
     }
 

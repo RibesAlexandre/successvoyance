@@ -13,7 +13,17 @@ require('laravel-elixir-vue-2');
  |
  */
 
+var scripts = {
+    toastr: './node_modules/toastr/toastr.js',
+}
+
 elixir(mix => {
     mix.sass('app.scss')
-       .webpack('app.js');
+    .sass([
+        'toastr.scss',
+    ], 'public/css/components.css')
+    .scripts([
+        scripts.toastr,
+    ], 'public/js/components.js')
+    .webpack('app.js');
 });
