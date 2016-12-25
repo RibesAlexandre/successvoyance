@@ -14,6 +14,9 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+//  Utils
+use Date;
+
 /**
  * Class User
  * @author Alexandre Ribes
@@ -97,5 +100,15 @@ class User extends Authenticatable
     public function newsletter()
     {
         return $this->hasOne(Newsletter::class, 'user_id');
+    }
+
+    /**
+     * Formatage de la date de naissance
+     *
+     * @param $value
+     */
+    public function setDobAttribute($value)
+    {
+        $this->attributes['dob'] = is_null($value) || empty($value) ? null : Date::parse($value)->format('Y-m-d');
     }
 }

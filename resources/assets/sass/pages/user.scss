@@ -1,0 +1,20 @@
+@import '../variables';
+@import '../mixins';
+
+.user-avatar {
+  width: 106px;
+  height: 106px;
+  background-color: #999999;
+  border: 4px solid #CCCCCC;
+  color: #FFFFFF;
+  border-radius: 50%;
+  margin: 5px auto;
+  overflow: hidden;
+  transition: all 0.2s;
+  -webkit-transition: all 0.2s;
+
+  &:hover {
+    background-color: $brand-primary;
+    border-color: $brand-primary;
+  }
+}

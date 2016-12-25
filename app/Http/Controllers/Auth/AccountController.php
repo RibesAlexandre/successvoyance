@@ -7,6 +7,7 @@ use App\Http\Requests\User\EditAccountRequest;
 use App\Http\Requests\User\EditPasswordRequest;
 use App\Http\Requests\User\EditPictureRequest;
 
+use Auth;
 use Image;
 use App\Models\User;
 use App\Http\Controllers\Controller;

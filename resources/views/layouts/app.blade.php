@@ -7,12 +7,14 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @yield('metas')
 
     <title>@yield('title') - {{ config('app.name') }}</title>
 
     <!-- Styles -->
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/components.css" rel="stylesheet">
+    @yield('css')
 
     <!-- Scripts -->
     <script>
@@ -85,5 +87,6 @@
     <!-- Scripts -->
     <script src="/js/app.js"></script>
     <script src="/js/components.js"></script>
+    @yield('js')
 </body>
 </html>

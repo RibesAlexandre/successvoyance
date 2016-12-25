@@ -1,0 +1,33 @@
+@import '../variables';
+@import '../mixins';
+
+section {
+  background-color: #FFFFFF;
+  @include border-box();
+  padding: 10px;
+
+  &.full-content {
+    min-height: 410px;
+    transition: all 0.2s;
+    -webkit-transition: all 0.2s;
+  }
+
+  &.with-aside {
+    width: 68%;
+    float: left;
+    position: relative;
+  }
+}
+
+aside {
+  background-color: #FFFFFF;
+  @include border-box();
+  padding: 10px;
+  width: 29%;
+  float: right;
+  position: relative;
+
+  @media( max-width: $screen-phone ) {
+    display: none;
+  }
+}

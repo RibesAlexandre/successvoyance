@@ -26,5 +26,6 @@ elixir(mix => {
         scripts.toastr,
         'components.js',
     ], 'public/js/components.js')
+	.copy('resources/assets/imgs', 'public/imgs')
     .webpack('app.js');
 });

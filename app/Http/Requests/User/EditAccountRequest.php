@@ -31,7 +31,8 @@ class EditAccountRequest extends FormRequest
         return [
             'name'          =>  'required|max:255',
             'firstname'     =>  'required|max:255',
-            'email'         =>  'required|max:255|email'
+            'email'         =>  'required|max:255|email',
+            'dob'           =>  'date|date_format:d-m-Y',
         ];
     }
 }

@@ -7,40 +7,12 @@
 
 // Bootstrap
 @import "../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
-@import 'template.scss';
+//@import 'template.scss';
 
-@mixin border-box() {
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-}
+//  Composants
+@import 'pages/structure.scss';
+@import 'pages/user.scss';
 
-section {
-  background-color: #FFFFFF;
-  @include border-box();
-  padding: 10px;
+$border
 
-  &.full-content {
-    min-height: 410px;
-    transition: all 0.2s;
-    -webkit-transition: all 0.2s;
-  }
 
-  &.with-aside {
-    width: 68%;
-    float: left;
-    position: relative;
-  }
-}
-
-aside {
-  background-color: #FFFFFF;
-  @include border-box();
-  padding: 10px;
-  width: 29%;
-  float: right;
-  position: relative;
-
-  @media( max-width: $screen-phone ) {
-    display: none;
-  }
-}
