@@ -20,10 +20,11 @@ var scripts = {
 elixir(mix => {
     mix.sass('app.scss')
     .sass([
-        'toastr.scss',
+        'components/toastr.scss',
     ], 'public/css/components.css')
     .scripts([
         scripts.toastr,
+        'components.js',
     ], 'public/js/components.js')
     .webpack('app.js');
 });

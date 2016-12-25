@@ -1,0 +1,55 @@
+@import "./template/variables";
+@import './variables';
+
+$primary-color:              $brand-primary !default;
+$primary-bg:                 $brand-primary !default;
+$primary-states-color:       darken($brand-primary, 10%) !default;
+
+$success-color:              $brand-success !default;
+$success-bg:                 $brand-success !default;
+$success-states-color:       darken($brand-success, 10%) !default;
+
+$info-color:                 $brand-info !default;
+$info-bg:                    $brand-info !default;
+$info-states-color:          darken($brand-info, 10%) !default;
+
+$warning-color:              $brand-warning !default;
+$warning-bg:                 $brand-warning !default;
+$warning-states-color:       darken($brand-warning, 10%) !default;
+
+
+$danger-color:               $brand-danger !default;
+$danger-bg:                  $brand-danger !default;
+$danger-states-color:        darken($brand-danger, 10%) !default;
+
+$white-navbar:              rgba(#FFFFFF, .96);
+$blue-navbar:               rgba(#34ACDC, .98);
+$azure-navbar:              rgba(#5BCAFF, .98);
+$green-navbar:              rgba(#4CD964, .98);
+$orange-navbar:             rgba(#FF9500, .98);
+$red-navbar:                rgba(#FF4C40, .98);
+
+@import "./template/mixins";
+@import "./template/typography";
+
+// Core CSS
+@import "./template/misc";
+@import "./template/buttons";
+@import "./template/inputs";
+@import "./template/sliders";
+@import "./template/alerts";
+@import "./template/labels-and-progress-bars";
+@import "./template/tooltips";
+@import "./template/checkbox-radio-switch";
+@import "./template/navbars";
+
+
+// Fancy Stuff
+
+@import "./template/dropdown";
+@import "./template/tabs-navs-pagination";
+@import "./template/collapse";
+@import "./template/carousel";
+@import "./template/modal";
+@import "./template/responsive";
+
