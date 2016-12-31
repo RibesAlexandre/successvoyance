@@ -30,8 +30,34 @@ trait UserPresenter
         return is_null($this->avatar) ? asset('imgs/components/default-avatar.png') : asset('uploads/avatars/' . $this->avatar);
     }
 
+    /**
+     * Retourne la date de naissance formatée
+     *
+     * @param $value
+     * @return string
+     */
     public function getDobAttribute($value)
     {
         return is_null($value) ? 'Non renseigné' : Date::parse($value)->format('d M Y');
+    }
+
+    /**
+     * Determine whether the user can do specific permission that given by name parameter.
+     *
+     * @param $name
+     *
+     * @return bool
+     */
+    public function isAuthorized($name)
+    {
+        foreach ($this->roles as $role) {
+            foreach ($role->permissions as $permission) {
+                if ($permission->name == $name || $permission->slug == $name || $permission->id == $name) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

@@ -17,6 +17,7 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('name', 60);
             $table->string('slug', 60)->unique();
+            $table->softDeletes();
         });
 
         Schema::create('permissions', function(Blueprint $table) {
@@ -25,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('slug', 60)->unique();
             $table->text('content')->nullable();
             $table->string('section', 60);
+            $table->softDeletes();
         });
 
         Schema::create('roles_permissions', function(Blueprint $table) {

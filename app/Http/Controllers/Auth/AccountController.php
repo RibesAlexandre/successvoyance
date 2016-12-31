@@ -50,7 +50,11 @@ class AccountController extends Controller
         Auth::user()->update($request->all());
         return response()->json([
             'success'   =>  true,
-            'content'   =>  view('components.infobox', ['type' => 'success', 'message' => 'Vos informations ont correctement été mises à jour.'])->render()
+            'alert'     =>  true,
+            //'content'   =>  view('components.infobox', ['type' => 'success', 'message' => 'Vos informations ont correctement été mises à jour.'])->render(),
+            'inputs'    =>  $request->all(),
+            'type'      =>  'success',
+            'message'   =>  'Vos informations ont correctement été mises à jour',
         ]);
     }
 
@@ -72,10 +76,13 @@ class AccountController extends Controller
      */
     public function updatePassword(EditPasswordRequest $request)
     {
-        if( Auth::user()->password != $request->input('old_password') ) {
+        if( !password_verify($request->input('old_password'), Auth::user()->password) ) {
             return response()->json([
                 'success'   =>  true,
-                'content'   =>  view('components.infobox', ['type' => 'danger', 'message' => 'Votre ancien mot de passe ne correspond pas avec celui que nous possédons.'])->render()
+                'alert'     =>  true,
+                //'content'   =>  view('components.infobox', ['type' => 'danger', 'message' => 'Votre ancien mot de passe ne correspond pas avec celui que nous possédons.'])->render(),
+                'type'      =>  'error',
+                'message'   =>  'Votre ancien mot de passe ne correspond pas avec celui que nous possédons.',
             ]);
         }
 
@@ -85,7 +92,16 @@ class AccountController extends Controller
 
         return response()->json([
             'success'   =>  true,
-            'content'   =>  view('components.infobox', ['type' => 'success', 'message' => 'Votre mot de passe a correctement été mis à jour'])->render()
+            'alert'     =>  true,
+            'clean'     =>  true,
+            'to_clean'  =>  [
+                'old_password',
+                'password',
+                'password_confirmation'
+            ],
+            //'content'   =>  view('components.infobox', ['type' => 'success', 'message' => 'Votre mot de passe a correctement été mis à jour'])->render(),
+            'type'      =>  'success',
+            'message'   =>  'Votre mot de passe a correctement été mis à jour.'
         ]);
     }
 

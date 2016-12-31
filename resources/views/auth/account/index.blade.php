@@ -6,6 +6,7 @@
 
     <section class="full-content">
         <h2 class="text-center">{{ Auth::user()->full_name }}</h2>
+        <hr>
         <div class="row">
             <div class="col-md-4 text-center">
                 <img src="{{ Auth::user()->avatar() }}" alt="{{ Auth::user()->full_name }}" class="user-avatar"><br />

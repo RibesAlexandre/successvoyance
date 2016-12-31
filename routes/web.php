@@ -22,9 +22,9 @@ Route::group(['prefix' => 'mon-compte', 'namespace' => 'Auth', 'middleware' => '
     Route::get('/mes-informations', ['uses' => 'AccountController@edit', 'as' => 'account.edit']);
     Route::get('/mon-mot-de-passe', ['uses' => 'AccountController@password', 'as' => 'account.password']);
     Route::get('/supprimer-mon-compte', ['uses' => 'AccountController@delete', 'as' => 'account.delete']);
-    Route::put('/mes-informations', ['uses' => 'AccountController@update', 'as' => 'account.update']);
-    Route::put('/mon-mot-de-passe', ['uses' => 'AccountController@updatePassword', 'as' => 'account.password.update']);
-    Route::put('/supprimer-mon-compte', ['uses' => 'AccountController@destroy', 'as' => 'account.destroy']);
+    Route::post('/mes-informations', ['uses' => 'AccountController@update', 'as' => 'account.update']);
+    Route::post('/mon-mot-de-passe', ['uses' => 'AccountController@updatePassword', 'as' => 'account.password.update']);
+    Route::delete('/supprimer-mon-compte', ['uses' => 'AccountController@destroy', 'as' => 'account.destroy']);
 });
 
 //  Formulaire de contact
@@ -60,6 +60,19 @@ Route::group(['prefix' => 'forum', 'namespace' => 'Forum'], function() {
 /**
  * Administration
  */
-Route::group(['prefix' => 'dashboard-123', 'namespace', 'App\Http\Controllers\Admin'], function() {
+Route::group(['prefix' => 'dashboard-123', 'namespace' => 'Admin'], function() {
+//Route::group(['prefix' => 'dashboard-123', 'namespace' => 'Admin', 'middleware' => 'authorized'], function() {
+    Route::get('/', ['uses' =>   'DashBoardController@index', 'as' => 'admin.index']);
 
+    /*
+     * Gestion des rôles
+     */
+    Route::resource('roles', 'RolesController', ['names' => [
+        'index'     =>  'admin.roles.index',
+        'edit'      =>  'admin.roles.edit',
+        'update'    =>  'admin.roles.update',
+        'create'    =>  'admin.roles.create',
+        'store'     =>  'admin.roles.store',
+        'destroy'   =>  'admin.roles.destroy',
+    ], 'except' => ['show']]);
 });

@@ -12,13 +12,13 @@
     <title>@yield('title') - {{ config('app.name') }}</title>
 
     <!-- Styles -->
-    <link href="/css/app.css" rel="stylesheet">
-    <link href="/css/components.css" rel="stylesheet">
+    <link href="{{ elixir('css/app.css') }}" rel="stylesheet">
+    <link href="{{ elixir('css/components.css') }}" rel="stylesheet">
     @yield('css')
 
     <!-- Scripts -->
     <script>
-        window.Laravel = <?php echo json_encode([
+        window.Laravel = <?= json_encode([
             'csrfToken' => csrf_token(),
         ]); ?>
     </script>
@@ -85,8 +85,10 @@
     </div>
 
     <!-- Scripts -->
-    <script src="/js/app.js"></script>
-    <script src="/js/components.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="{{ elixir('js/app.js') }}"></script>
+    <script src="{{ elixir('js/components.js') }}"></script>
     @yield('js')
 </body>
 </html>

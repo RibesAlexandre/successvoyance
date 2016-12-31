@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Post extends Model
 {
-    protected $table = ['forum_posts'];
+    protected $table = 'forum_posts';
 
     protected $fillable = ['content', 'user_id', 'topic_id', 'created_at', 'updated_at', 'deleted_at', 'enabled'];
 

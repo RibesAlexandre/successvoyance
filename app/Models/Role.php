@@ -2,6 +2,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Role
@@ -10,9 +11,13 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Role extends Model
 {
-    protected $fillable = ['name', 'slug'];
+    use SoftDeletes;
+
+    protected $fillable = ['name', 'slug', 'deleted_at'];
 
     public $timestamps = false;
+
+    protected $dates = ['deleted_at'];
 
     /**
      * Permissions du rôle
@@ -32,5 +37,16 @@ class Role extends Model
     public function users()
     {
         return $this->belongsToMany(User::class, 'roles_users', 'role_id');
+    }
+
+    /**
+     * Formate le slug lors
+     *
+     * @param $value
+     */
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = ucwords($value);
+        $this->attributes['slug'] = str_slug($value);
     }
 }
