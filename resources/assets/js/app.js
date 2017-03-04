@@ -1,22 +1,21 @@
+window.width = $(window).width();
+var plugin_path = 'js/plugins';
+
 var app = {
 	
+	/**
+	 * On initialise l'application
+	 */
 	init: function() {
 		$.ajaxSetup({
 			cache: false,
 			headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
 		});
 		this.delete();
-	},
-	
-	readURL: function (input) {
-		if (input.files && input.files[0]) {
-			var reader = new FileReader();
-			
-			reader.onload = function (e) {
-				$('#wizardPicturePreview').attr('src', e.target.result).fadeIn('slow');
-			}
-			reader.readAsDataURL(input.files[0]);
-		}
+		this.loadJson();
+		this.loadDataOnClick();
+		components.init();
+		actions.init();
 	},
 	
 	/**
@@ -49,42 +48,194 @@ var app = {
 					
 					console.log(response);
 					
-					if( typeof response.alert != 'undefined' ) {
-						toastr[response.type](response.message);
-					} else if( typeof response.content != 'undefined' ) {
-						$(response.element)[response.method](response.content);
+					var timer = 0;
+					if( typeof response.timer != 'undefined' ) {
+						timer = response.timer;
+						if( typeof response.redirect != 'undefined' && timer == 0 ) {
+							timer = 5000;
+						}
 					}
 					
-					if( typeof response.clean != 'undefined' && typeof response.to_clean != 'undefined' && response.clean ) {
-						$.each(response.to_clean, function(key, value) {
-							if( $('#' + value).length > 0 ) {
-								$('#' + value).val('');
-							}
-						});
-					}
+					console.log(timer);
 					
-					if( typeof response.inputs != 'undefined' ) {
-						$.each(response.inputs, function(key, value) {
-							if( $('#' + key).length > 0 ) {
-								$('#' + key).val(value);
+					setTimeout(function() {
+						if( typeof response.alert != 'undefined' ) {
+							var alertType = 'success';
+							if( typeof response.type != 'undefined' ) {
+								alertType = response.type;
 							}
-						});
-					}
+							toastr[alertType](response.message);
+						} else if( typeof response.content != 'undefined' ) {
+							$(response.element)[response.method](response.content);
+						}
+						
+						if( typeof response.clean != 'undefined' && typeof response.to_clean != 'undefined' && response.clean ) {
+							$.each(response.to_clean, function(key, value) {
+								if( $('#' + value).length > 0 ) {
+									$('#' + value).val('');
+								}
+							});
+						}
+						
+						if( typeof response.inputs != 'undefined' ) {
+							$.each(response.inputs, function(key, value) {
+								if( $('#' + key).length > 0 ) {
+									$('#' + key).val(value);
+								}
+							});
+						}
+						
+						if( typeof response.redirect != 'undefined' ) {
+							//var timer = typeof response.timer == 'undefined' ? 5000 : response.timer;
+							//setTimeout(function() {
+								$(location).attr('href', response.redirect);
+							//}, timer);
+						}
+					}, timer);
 				},
 				error :function(response) {
-					var $errors = $.parseJSON(response.responseText);
-					
 					var $errorsReturn = '';
+					var $errors = $.parseJSON(response.responseText);
 					
 					$.each( $errors, function( key, value ) {
 						$errorsReturn += '<li>' + value[0] + '</li>';
-						$('#' + key).closest('.form-group').addClass('has-error');
-						$('#' + key).after('<span class="help-block return-error">' + value[0] + '</span>');
+						$('#' + f.attr('id') + ' #' + key).parents('.form-group').addClass('has-error');
+						$('#' + f.attr('id') + ' #' + key).after('<span class="help-block return-error">' + value[0] + '</span>');
 					});
 					
 					f.prepend('<div class="alert alert-danger ' + f.attr('id') + '-errors"><ul>' + $errorsReturn + '</ul></di>');
 				}
+			});
+		});
+	},
+	
+	/**
+	 * Permet d'intéragir en JSON facilement
+	 */
+	loadJson: function() {
+		$('body').on('click', '[data-action="json"]', function(e) {
+			e.preventDefault();
+			$.ajax({
+				url: $(this).attr('href'),
+				method: 'GET',
+				dataType: 'JSON',
+				success: function(response) {
+					if( response.success ) {
+						
+						var timer = 0;
+						if( typeof response.timer != 'undefined' ) {
+							timer = response.timer;
+							if( typeof response.redirect != 'undefined' && timer == 0 ) {
+								timer = 5000;
+							}
+						}
+						
+						console.log(timer);
+						
+						setTimeout(function() {
+							if( typeof response.alert != 'undefined' ) {
+								var alertType = 'success';
+								if( typeof response.type != 'undefined' ) {
+									alertType = response.type;
+								}
+								toastr[alertType](response.message);
+							} else if( typeof response.content != 'undefined' ) {
+								$(response.element)[response.method](response.content);
+							}
+							
+							if( typeof response.redirect != 'undefined' ) {
+								//var timer = typeof response.timer == 'undefined' ? 5000 : response.timer;
+								//setTimeout(function() {
+									$(location).attr('href', response.redirect);
+								//}, timer);
+							}
+						}, timer);
+					} else {
+						toastr['error'](response.message);
+					}
+				},
 			})
+		})
+	},
+	
+	
+	/**
+	 * Permet de charger avec des réglages prédéfinis summernote
+	 * @param form
+	 * @param textarea
+	 */
+	loadSummerNote: function(form, textarea) {
+		$(textarea).summernote({
+			height: 500,
+			lang: 'fr-FR',
+			dialogsInBody: true,
+			callbacks: {
+				onImageUpload: function(image) {
+					console.log(image[0]);
+					uploadImage(image[0]);
+				},
+			}
+		});
+		
+		/**
+		 * Upload d'image en AJAX avec summernote
+		 * @param image
+		 */
+		function uploadImage(image) {
+			var data = new FormData();
+			data.append('picture', image);
+			//data.append('_token', $('meta[name="csrf-token"]').attr('content'));
+			data.append('_method', 'POST');
+			data.append('_token', $('meta[name="csrf-token"]').attr('content'));
+			console.log(data);
+			//console.log(data);
+			$.ajax({
+				//data: {picture: file, _token: $('meta[name="csrf-token"]').attr('content'), _method: 'POST'},
+				data: data,
+				method: 'POST',
+				url: laroute.route('admin.pictures.upload'),
+				cache: false,
+				contentType: false,
+				processData: false,
+				success: function(response) {
+					console.log(response);
+					$(textarea).summernote('insertImage', response.url, function($image) {
+						$image.attr('class', 'img-responsive');
+						$image.attr('id', response.name);
+					});
+					
+					$('#pictures_list').append(response.content);
+					$(form).prepend('<input name=pictures[] type="hidden" id="picture_' + response.id + '" value="' + response.id + '">');
+				}, error: function(response) {
+					console.log(response);
+					var $errors = $.parseJSON(response.responseText);
+					$.each( $errors, function( key, value ) {
+						toastr.error(value[0]);
+					});
+				}
+			});
+		}
+	},
+	
+	/**
+	 * Permet de supprimer une photo dans l'éditeur, en la retirant également sur summernote
+	 * @param summernote
+	 */
+	removePicture: function(summernote) {
+		$('body').on('click', '[data-action="remove-picture"]', function(e) {
+			e.preventDefault();
+			$.ajax({
+				method: 'GET',
+				url: laroute.route('admin.pictures.destroy'),
+				data: {image: $(this).attr('data-name')},
+				success: function(response) {
+					if( response.success ) {
+						$('#picture_' + response.id).remove();
+						$('#picture_card_' + response.id).remove();
+						$(summernote).summernote('removeMedia', $('#' + response.name));
+					}
+				}
+			});
 		});
 	},
 	
@@ -100,10 +251,38 @@ var app = {
 				} else {
 					$(response.element)[response.method](response.content);
 				}
-			})
-		})
+			});
+		});
 	},
 	
+	/**
+	 * Permet d'ordonner des liens facilement
+	 */
+	orderLinks: function() {
+		$('body').on('click', '[data-action="order"]', function(e) {
+			e.preventDefault();
+			var action = $(this);
+			var div = action.attr('data-div');
+			$.get(action.attr('href'), function(response) {
+				if( response.success ) {
+					//$('#link_' + response.link.id).remove();
+					//link.find('data-info=["position"]').text(response.link.position);
+					if( action.attr('data-asc') == 'up' ) {
+						$('#' + div + '_' + response.element.id).insertBefore('#' + div + '_' + response.move.id);
+					} else {
+						$('#' + div + '_' + response.element.id).insertAfter('#' + div + '_' + response.move.id);
+					}
+					
+					$('#' + div + '_' + response.element.id).find('[data-info="position"]').text(response.position);
+					$('#' + div + '_' + response.move.id).find('[data-info="position"]').text(response.move_pos);
+				}
+			});
+		});
+	},
+	
+	/**
+	 * Box de suppression en AJAX avec confirmation
+	 */
 	delete: function() {
 		$('body').on('click', '[data-action="delete"]', function(e) {
 			e.preventDefault();
@@ -140,8 +319,11 @@ var app = {
 						})
 					}
 				});
-		})
+		});
 	}
-}
+};
 
+/**
+ * Let's GO !
+ */
 app.init();

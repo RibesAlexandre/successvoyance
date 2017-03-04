@@ -170,7 +170,9 @@ return [
         AdamWathan\BootForms\BootFormsServiceProvider::class,
         Jenssegers\Date\DateServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
-
+        UxWeb\SweetAlert\SweetAlertServiceProvider::class,
+        Lord\Laroute\LarouteServiceProvider::class,
+        Laracasts\Flash\FlashServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -180,6 +182,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        \App\Providers\ComposerServiceProdivider::class,
 
     ],
 
@@ -236,7 +239,14 @@ return [
         'Html'          => Collective\Html\HtmlFacade::class,
         'BootForm'      => AdamWathan\BootForms\Facades\BootForm::class,
         'Date'          => Jenssegers\Date\Date::class,
-        'Image'         => Intervention\Image\Facades\Image::class
+        'Image'         => Intervention\Image\Facades\Image::class,
+        'Alert'         => UxWeb\SweetAlert\SweetAlert::class,
+
+        /**
+         * Custom
+         */
+        'Sync'      =>  \App\Services\Facades\Sync::class,
+        'Audiotel'  =>  \App\Services\Facades\Audiotel::class,
     ],
 
 ];

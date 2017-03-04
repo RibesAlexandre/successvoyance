@@ -42,13 +42,24 @@ class CreateUsersTable extends Migration
 
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->string('firstname');
+            $table->string('nickname', 80)->unique();
+            $table->string('name', 80);
+            $table->string('firstname', 80);
             $table->string('email')->unique();
             $table->string('password');
             $table->string('avatar')->nullable();
             $table->date('dob')->nullable();
-            $table->timestamp('last_connexion');
+            $table->string('job', 120)->nullable();
+            $table->string('website', 120)->nullable();
+            $table->string('country', 60)->nullable();
+            $table->string('city', 80)->nullable();
+            $table->text('biography')->nullable();
+            $table->boolean('can_contact')->default(false);
+            $table->tinyInteger('can_full_name')->default(0);
+            $table->boolean('can_newsletter')->default(true);
+            $table->boolean('can_astrological')->default(false);
+            $table->boolean('can_age')->default(false);
+            $table->datetime('last_connexion')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

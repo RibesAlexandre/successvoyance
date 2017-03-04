@@ -45,9 +45,33 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ route('admin.signs.index') }}">
+                        <i class="fa fa-star"></i>
+                        <p>Horoscopes</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.users.index') }}">
+                        <i class="fa fa-users"></i>
+                        <p>Liste des utilisateurs</p>
+                    </a>
+                </li>
+                <li>
                     <a href="{{ route('admin.roles.index') }}">
                         <i class="fa fa-key"></i>
-                        <p>Rôles</p>
+                        <p>Niveaux d'autorisations</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.pages.index') }}">
+                        <i class="fa fa-file-text"></i>
+                        <p>Pages Annexes</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.manager.index') }}">
+                        <i class="fa fa-cubes"></i>
+                        <p>Configuration</p>
                     </a>
                 </li>
             </ul>
@@ -98,7 +122,7 @@
         </nav>
 
 
-        <div class="content">
+        <div class="content" id="admin-container">
             @yield('content')
         </div>
 
@@ -137,7 +161,6 @@
 
     </div>
 </div>
-
 
 </body>
 

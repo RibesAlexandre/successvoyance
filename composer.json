@@ -4,13 +4,23 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "type": "project",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/maddhatter/html.git"
+        }
+    ],
     "require": {
         "php": ">=5.6.4",
-        "laravel/framework": "5.3.*",
-        "laravelcollective/html": "^5.3.0",
+        "laravel/framework": "5.4.*",
+        "laravelcollective/html": "5.4.x-dev",
         "adamwathan/bootforms": "^0.8.2",
         "jenssegers/date": "^3.2",
-        "intervention/image": "^2.3"
+        "intervention/image": "^2.3",
+        "uxweb/sweet-alert": "^1.4",
+        "lord/laroute": "^2.3",
+        "caouecs/laravel-lang": "~3.0",
+        "laracasts/flash": "^2.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

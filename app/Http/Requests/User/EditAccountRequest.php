@@ -32,7 +32,11 @@ class EditAccountRequest extends FormRequest
             'name'          =>  'required|max:255',
             'firstname'     =>  'required|max:255',
             'email'         =>  'required|max:255|email',
-            'dob'           =>  'date|date_format:d-m-Y',
+            'dob'           =>  'nullable|date|date_format:Y-m-d',
+            'city'          =>  'nullable|max:80',
+            'job'           =>  'nullable|max:120',
+            'website'       =>  'nullable|max:120|url',
+            'country'       =>  'nullable|max:60',
         ];
     }
 }

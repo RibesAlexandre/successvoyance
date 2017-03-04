@@ -31,7 +31,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = ['name', 'firstname', 'email', 'password', 'avatar', 'dob', 'last_connexion', 'deleted_at'];
+    protected $fillable = ['name', 'firstname', 'nickname', 'email', 'password', 'avatar', 'dob', 'website', 'job', 'country', 'city', 'biography', 'can_contact', 'can_full_name', 'can_newsletter', 'can_astrological', 'can_age', 'last_connexion', 'deleted_at'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -41,6 +41,8 @@ class User extends Authenticatable
     protected $hidden = ['password', 'remember_token'];
 
     protected $dates = ['last_connexion', 'deleted_at'];
+
+    protected $with = ['roles'];
 
     /**
      * Sujets crées par l'utilisateur

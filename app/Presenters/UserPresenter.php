@@ -17,7 +17,27 @@ trait UserPresenter
      */
     public function getFullNameAttribute()
     {
-        return $this->firstname . ' ' . $this->name;
+        if( $this->can_full_name == 0 ) {
+            return $this->nickname;
+        } elseif ( $this->can_full_name == 1 ) {
+            return $this->firstname;
+        } else {
+            return $this->firstname . ' ' . $this->name;
+        }
+    }
+
+    /**
+     * Retourne le prénom de l'utilisateur
+     *
+     * @return mixed
+     */
+    public function getFirstnameAttribute($value)
+    {
+        if( is_null($value) || empty($value) ) {
+            return $this->nickname;
+        }
+
+        return $value;
     }
 
     /**
@@ -36,9 +56,24 @@ trait UserPresenter
      * @param $value
      * @return string
      */
-    public function getDobAttribute($value)
+    public function getBirthdayAttribute($value)
     {
         return is_null($value) ? 'Non renseigné' : Date::parse($value)->format('d M Y');
+    }
+
+    public function getDobDateAttribute()
+    {
+        return is_null($this->dob) ? null : Date::parse($this->dob)->format('Y-m-d');
+    }
+
+    /**
+     * Retourne l'âge de l'utilisateur
+     *
+     * @return null
+     */
+    public function getAgeAttribute()
+    {
+        return !is_null($this->dob) ? Date::createFromDate(Date::parse($this->dob)->format('Y'), Date::parse($this->dob)->format('m'), Date::parse($this->dob)->format('d'))->age : null;
     }
 
     /**
@@ -53,6 +88,35 @@ trait UserPresenter
         foreach ($this->roles as $role) {
             foreach ($role->permissions as $permission) {
                 if ($permission->name == $name || $permission->slug == $name || $permission->id == $name) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Détermine si l'utilisateur fait parti d'un ou de plusieurs rôles spécifiques
+     *
+     * @param $name
+     * @return bool
+     */
+    public function isRole($name) {
+        if( is_array($name) ) {
+            $rolesIds = [];
+            $rolesSlugs = [];
+            foreach( $this->roles as $role ) {
+                $rolesIds[] = $role->id;
+                $rolesSlugs[] = $role->slug;
+            }
+
+            if( in_array(str_slug($name), $rolesSlugs) || in_array(intval($name), $rolesIds) ) {
+                return true;
+            }
+        } else {
+            foreach( $this->roles as $role ) {
+                if( str_slug($name) == $role->slug || intval($name) == $role->id ) {
                     return true;
                 }
             }

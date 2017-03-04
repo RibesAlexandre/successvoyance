@@ -1,6 +1,6 @@
 const elixir = require('laravel-elixir');
 
-require('laravel-elixir-vue-2');
+//require('laravel-elixir-vue-2');
 
 /*
  |--------------------------------------------------------------------------
@@ -15,22 +15,40 @@ require('laravel-elixir-vue-2');
 
 var scripts = {
     toastr: './node_modules/toastr/toastr.js',
-	sweetalert: './node_modules/sweetalert/dist/sweetalert-dev.js',
+	sweetalert: './node_modules/sweetalert/dist/sweetalert.min.js',
+	pjax: './bower_components/jquery-pjax/jquery.pjax.js',
+	//datetimepicker: './bower_components/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
+	//moment: './bower_components/moment/min/moment.min.js',
+	//moment_fr: './bower_components/moment/locale/fr.js'
 }
 
 elixir(function(mix) {
-	mix.sass('app.scss')
+	mix
+		//.sass('app.scss')
+		.styles([
+			'essentials.css',
+			'layout.css',
+			'header.css',
+			'color.css'
+		], 'public/css/app.css')
 		.sass([
-			'components/toastr.scss',
-			'components/sweetalert.scss',
+			'components/*.scss',
+			'components/**.scss',
 		], 'public/css/components.css')
+		.sass([
+			'plugins/*/scss',
+			'plugins/**.scss',
+		], 'public/css/plugins.css')
 		.scripts([
 			//'components.js',
 			scripts.toastr,
 			scripts.sweetalert,
+			//scripts.pjax,
 		], 'public/js/components.js')
 		.copy('resources/assets/imgs', 'public/imgs')
 		.scripts([
+			'actions.js',
+			'components.js',
 			'app.js'
 		], 'public/js/app.js')
 		.scripts([
@@ -40,6 +58,11 @@ elixir(function(mix) {
 			'admin/chartist.min.js',
 			'admin/light-bootstrap-dashboard.js'
 		], 'public/js/admin.js')
+		.scripts([
+			//'plugins/moment.js',
+			//'plugins/datetimepicker.js',
+			'plugins/sumernote_fr.js',
+		], 'public/js/plugins.js')
 		.sass([
 			'admin/light-bootstrap-dashboard.scss'
 		], 'public/css/admin.css')
@@ -47,9 +70,12 @@ elixir(function(mix) {
             'css/app.css',
             'css/components.css',
             'js/components.js',
+            'js/plugins.js',
             'js/app.js',
 			'css/admin.css',
-			'js/admin.js'
+			//'css/plugins.css',
+			'js/admin.js',
+			'js/laroute.js'
         ])
 	//.webpack('app.js');
 });

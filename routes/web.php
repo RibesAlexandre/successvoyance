@@ -22,9 +22,14 @@ Route::group(['prefix' => 'mon-compte', 'namespace' => 'Auth', 'middleware' => '
     Route::get('/mes-informations', ['uses' => 'AccountController@edit', 'as' => 'account.edit']);
     Route::get('/mon-mot-de-passe', ['uses' => 'AccountController@password', 'as' => 'account.password']);
     Route::get('/supprimer-mon-compte', ['uses' => 'AccountController@delete', 'as' => 'account.delete']);
+
+    Route::get('supprimer-avatar', ['uses' => 'AccountController@removePicture', 'as' => 'account.avatar.delete']);
+    Route::delete('/supprimer-mon-compte', ['uses' => 'AccountController@destroy', 'as' => 'account.destroy']);
+
     Route::post('/mes-informations', ['uses' => 'AccountController@update', 'as' => 'account.update']);
     Route::post('/mon-mot-de-passe', ['uses' => 'AccountController@updatePassword', 'as' => 'account.password.update']);
-    Route::delete('/supprimer-mon-compte', ['uses' => 'AccountController@destroy', 'as' => 'account.destroy']);
+    Route::post('/mes-preferences', ['uses' =>'AccountController@updatePrivacy', 'as' => 'account.privacy.update']);
+    Route::post('mon-avatar', ['uses' => 'AccountController@updatePicture', 'as' => 'account.avatar.update']);
 });
 
 //  Formulaire de contact
@@ -62,7 +67,8 @@ Route::group(['prefix' => 'forum', 'namespace' => 'Forum'], function() {
  */
 Route::group(['prefix' => 'dashboard-123', 'namespace' => 'Admin'], function() {
 //Route::group(['prefix' => 'dashboard-123', 'namespace' => 'Admin', 'middleware' => 'authorized'], function() {
-    Route::get('/', ['uses' =>   'DashBoardController@index', 'as' => 'admin.index']);
+
+    Route::get('/', ['uses' => 'DashBoardController@index', 'as' => 'admin.index']);
 
     /*
      * Gestion des rôles
@@ -75,4 +81,68 @@ Route::group(['prefix' => 'dashboard-123', 'namespace' => 'Admin'], function() {
         'store'     =>  'admin.roles.store',
         'destroy'   =>  'admin.roles.destroy',
     ], 'except' => ['show']]);
+
+    /**
+     * Editeur de pages
+     */
+    Route::resource('pages', 'PagesController', ['names' => [
+        'index'     =>  'admin.pages.index',
+        'edit'      =>  'admin.pages.edit',
+        'update'    =>  'admin.pages.update',
+        'create'    =>  'admin.pages.create',
+        'store'     =>  'admin.pages.store',
+        'destroy'   =>  'admin.pages.destroy',
+    ], 'except' => ['show']]);
+
+    /*
+     * Signes & Horoscopes
+     */
+    Route::get('signs', ['uses' => 'SignsController@index', 'as' => 'admin.signs.index']);
+    Route::get('signs/create-sign', ['uses' => 'SignsController@createSign', 'as' => 'admin.signs.create_sign']);
+    Route::post('signs/create-sign', ['uses' => 'SignsController@storeSign', 'as' => 'admin.signs.store_sign']);
+    Route::get('horoscopes/create-horoscope', ['uses' => 'SignsController@createHoroscope', 'as' => 'admin.signs.create_horoscope']);
+    Route::post('horoscopes/create-horoscope', ['uses' => 'SignsController@storeHoroscope', 'as' => 'admin.signs.store_horoscope']);
+    Route::get('signs/{id}/edit-sign', ['uses' => 'SignsController@editSign', 'as' => 'admin.signs.edit_sign']);
+    Route::patch('signs/{id}/edit-sign', ['uses' => 'SignsController@updateSign', 'as' => 'admin.signs.update_sign']);
+    Route::get('horoscopes/{id}/edit-horoscope', ['uses' => 'SignsController@editHoroscope', 'as' => 'admin.signs.edit_horoscope']);
+    Route::patch('horoscopes/{id}/edit-horoscope', ['uses' => 'SignsController@updateHoroscope', 'as' => 'admin.signs.update_horoscope']);
+    Route::delete('signs/{id}', ['uses' => 'SignsController@destroySign', 'as' => 'admin.signs.destroy_sign']);
+    Route::delete('horoscopes/{id}', ['uses' => 'SignsController@destroyHoroscope', 'as' => 'admin.signs.destroy_horoscope']);
+    Route::get('signs/{slug}', ['uses' => 'SignsController@show', 'as' => 'admin.signs.show']);
+
+    /*
+     * Gestion des utilisateurs
+     */
+    Route::get('users', ['uses' => 'UsersController@index', 'as' => 'admin.users.index']);
+    Route::get('users/{id}', ['uses' => 'UsersController@show', 'as' => 'admin.users.show']);
+    Route::patch('users/{id}', ['uses' => 'UsersController@update', 'as' => 'admin.users.update']);
+
+    /**
+     * Gestion des éléments du site
+     */
+    Route::group(['prefix' => 'management'], function() {
+        Route::get('/', ['uses' => 'ManagerController@index', 'as' => 'admin.manager.index']);
+        Route::get('link/{id}', ['uses' => 'ManagerController@link', 'as' => 'admin.manager.link']);
+        Route::get('links/create', ['uses' => 'ManagerController@createLink', 'as' => 'admin.manager.create_link']);
+        Route::post('links/create', ['uses' => 'ManagerController@storeLink', 'as' => 'admin.manager.store_link']);
+        Route::get('links/{id}/edit', ['uses' => 'ManagerController@editLink', 'as' => 'admin.manager.edit_link']);
+        Route::patch('links/{id}/edit', ['uses' => 'ManagerController@updateLink', 'as' => 'admin.manager.update_link']);
+        Route::get('order/{id}/{asc}/{type}', ['uses' => 'ManagerController@order', 'as' => 'admin.manager.order']);
+        Route::delete('links/{id}', ['uses' => 'ManagerController@destroyLink', 'as' => 'admin.manager.destroy_link']);
+
+        Route::get('carousels/create', ['uses' => 'ManagerController@createCarousel', 'as' => 'admin.manager.create_carousel']);
+        Route::post('carousels/create', ['uses' => 'ManagerController@storeCarousel', 'as' => 'admin.manager.store_carousel']);
+        Route::get('carousels/{id}/edit', ['uses' => 'ManagerController@editCarousel', 'as' => 'admin.manager.edit_carousel']);
+        Route::patch('carousels/{id}/edit', ['uses' => 'ManagerController@updateCarousel', 'as' => 'admin.manager.update_carousel']);
+        Route::delete('carousels/{id}', ['uses' => 'ManagerController@destroyCarousel', 'as' => 'admin.manager.destroy_carousel']);
+
+        Route::post('config', ['uses' => 'ManagerController@updateConfig', 'as' => 'admin.manager.update_config']);
+    });
+
+    //  Gestion des médias
+    Route::get('pictures/destroy', ['uses' => 'PicturesController@destroy', 'as' => 'admin.pictures.destroy']);
+    Route::post('pictures/upload', ['uses' => 'PicturesController@upload', 'as' => 'admin.pictures.upload']);
 });
+
+//  Pages du site
+Route::get('{slug}', ['uses' => 'SiteController@page', 'as' => 'page']);

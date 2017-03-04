@@ -18,7 +18,7 @@ class CreateFortuneTellingTable extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->string('logo')->nullable();
-            $table->text('content');
+            $table->text('content')->nullable();
             $table->date('begin_at');
             $table->date('ending_at');
             $table->timestamps();
@@ -31,6 +31,8 @@ class CreateFortuneTellingTable extends Migration
             $table->string('slug');
             $table->text('content');
             $table->integer('sign_id')->unsigned()->index()->nullable();
+            $table->date('begin_at');
+            $table->date('ending_at');
             $table->timestamps();
             $table->softDeletes();
         });

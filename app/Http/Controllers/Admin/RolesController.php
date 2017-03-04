@@ -53,11 +53,12 @@ class RolesController extends Controller
     {
         $role = Role::create($request->all());
         $permissions = [];
-        foreach( $request->input('permissions') as $p )
-        {
-            $permissions[] = $p;
+        if( $request->has('permissions') ) {
+            foreach( $request->input('permissions') as $p ) {
+                $permissions[] = $p;
+            }
+            $role->permissions()->sync($permissions);
         }
-        $role->permissions()->sync($permissions);
 
         return redirect()->route('admin.roles.index');
     }

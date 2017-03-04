@@ -12,6 +12,8 @@
     <title>@yield('title') - {{ config('app.name') }}</title>
 
     <!-- Styles -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="{{ elixir('css/app.css') }}" rel="stylesheet">
     <link href="{{ elixir('css/components.css') }}" rel="stylesheet">
     @yield('css')
@@ -23,72 +25,242 @@
         ]); ?>
     </script>
 </head>
-<body>
-    <div id="app">
-        <nav class="navbar navbar-default navbar-static-top">
-            <div class="container">
-                <div class="navbar-header">
-
-                    <!-- Collapsed Hamburger -->
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                        <span class="sr-only">Toggle Navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-
-                    <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
-                    </a>
-                </div>
-
-                <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="nav navbar-nav">
-                        &nbsp;
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="nav navbar-nav navbar-right">
-                        <!-- Authentication Links -->
-                        @if (Auth::guest())OA
-                            <li><a href="{{ url('/login') }}">Connexion</a></li>
-                            <li><a href="{{ url('/register') }}">Inscription</a></li>
-                        @else
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    {{ Auth::user()->fullName }} <span class="caret"></span>
-                                </a>
-
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ route('account') }}">Mon compte</a></li>
-                                    <li><a href="{{ route('account.edit') }}">Mes informations</a></li>
-                                    <li><a href="{{ route('account.password') }}">Mon mot de passe</a></li>
-                                    <li>
-                                        <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Déconnexion</a>
-                                        <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                                            {{ csrf_field() }}
-                                        </form>
-                                    </li>
-                                </ul>
-                            </li>
-                        @endif
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
+<body class="boxed">
+<div id="wrapper">
+    <div id="topBar">
         <div class="container">
-            @yield('content')
+
+            <!-- right -->
+            <ul class="top-links list-inline pull-right">
+                @if( Auth::check() )
+                <li class="text-welcome">Bienvenue <strong>{{ Auth::user()->firstname }}</strong></li>
+                <li>
+                    <a class="dropdown-toggle no-text-underline" data-toggle="dropdown" href="#"><i class="fa fa-user hidden-xs"></i> Mon compte</a>
+                    <ul class="dropdown-menu">
+                        <li><a tabindex="-1" href="{{ route('account') }}"><i class="fa fa-user"></i>Accueil</a></li>
+                        <li class="divider"></li>
+                        <li><a tabindex="-1" href="#"><i class="fa fa-bookmark"></i> MY WISHLIST</a></li>
+                        <li><a tabindex="-1" href="#"><i class="fa fa-edit"></i> MY REVIEWS</a></li>
+                        <li><a tabindex="-1" href="#"><i class="fa fa-cog"></i> MY SETTINGS</a></li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fa fa-sign-out"></i> Déconnexion</a>
+                            <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                                {{ csrf_field() }}
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+                @else
+                <li><a href="{{ url('login') }}">Connexion</a></li>
+                <li><a href="{{ url('register') }}">Inscription</a></li>
+                @endif
+            </ul>
+
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="{{ elixir('js/app.js') }}"></script>
-    <script src="{{ elixir('js/components.js') }}"></script>
-    @yield('js')
+
+    <div id="header" class="clearfix sticky">
+
+        <div class="search-box over-header">
+            <a id="closeSearch" href="#" class="fa fa-times"></a>
+
+            <form action="#" method="get">
+                <input type="text" class="form-control" placeholder="Rechercher" />
+            </form>
+        </div>
+
+        <header id="topNav">
+            <div class="container">
+
+                <button class="btn btn-mobile" data-toggle="collapse" data-target=".nav-main-collapse">
+                    <i class="fa fa-bars"></i>
+                </button>
+
+                <ul class="pull-right nav nav-pills nav-second-main">
+                    <li class="search">
+                        <a href="javascript:;">
+                            <i class="fa fa-search"></i>
+                        </a>
+                    </li>
+                </ul>
+
+                <a class="logo pull-left" href="{{ route('home') }}">
+                    <img src="{{ $cfg['logo'] }}" alt="{{ $cfg['name'] }}" class="img-responsive">
+                </a>
+
+                <div class="navbar-collapse pull-right nav-main-collapse collapse submenu-dark">
+                    <nav class="nav-main">
+                        <ul id="topMain" class="nav nav-pills nav-main">
+                            <li><a href="#">Accueil</a></li>
+                            <li><a href="#">Horoscope</a></li>
+                            <li><a href="#">Forum</a></li>
+                            <li><a href="#">Voyance</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>
+    </div>
+    <section class="page-header page-header-xs">
+        <div class="container">
+
+            <ol class="breadcrumb breadcrumb-inverse">
+                <li><i class="fa fa-home"></i> <a href="{{ route('home') }}">{{ $cfg['name'] }}</a></li>
+                @stack('breadcrumbs')
+            </ol>
+
+        </div>
+    </section>
+
+    @yield('content')
+</div>
+
+<footer id="footer">
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-md-3">
+                <!-- Footer Logo -->
+                Success Voyance
+
+                <!-- Small Description -->
+                <p>Integer posuere erat a ante venenatis dapibus posuere velit aliquet.</p>
+
+                <!-- Contact Address -->
+                <address>
+                    <ul class="list-unstyled">
+                        <li class="footer-sprite address">
+                            Success Voyance<br>
+                            6 rue des Tartampions<br>
+                            66000 Bompas<br>
+                        </li>
+                        <li class="footer-sprite phone">
+                            Phone: 07.09.09.09.09
+                        </li>
+                        <li class="footer-sprite email">
+                            <a href="#">contact@successvoyance.fr</a>
+                        </li>
+                    </ul>
+                </address>
+                <!-- /Contact Address -->
+
+            </div>
+
+            <div class="col-md-3">
+
+                <!-- Latest Blog Post -->
+                <h4 class="letter-spacing-1">Dernières conversations</h4>
+                <ul class="footer-posts list-unstyled">
+                    <li>
+                        <a href="#">Donec sed odio dui. Nulla vitae elit libero, a pharetra augue</a>
+                        <small>29 June 2015</small>
+                    </li>
+                    <li>
+                        <a href="#">Nullam id dolor id nibh ultricies</a>
+                        <small>29 June 2015</small>
+                    </li>
+                    <li>
+                        <a href="#">Duis mollis, est non commodo luctus</a>
+                        <small>29 June 2015</small>
+                    </li>
+                </ul>
+                <!-- /Latest Blog Post -->
+
+            </div>
+
+            <div class="col-md-2">
+
+                <!-- Links -->
+                <h4 class="letter-spacing-1">EXPLORE SMARTY</h4>
+                <ul class="footer-links list-unstyled">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Our Services</a></li>
+                    <li><a href="#">Our Clients</a></li>
+                    <li><a href="#">Our Pricing</a></li>
+                    <li><a href="#">Smarty Tour</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+                <!-- /Links -->
+
+            </div>
+
+            <div class="col-md-4">
+
+                <!-- Newsletter Form -->
+                <h4 class="letter-spacing-1">Restez connecté !</h4>
+                <p>Inscrivez vous à notre newsletter pour profiter de nos promotions et des nouveautés du site.</p>
+
+                <form class="validate" action="#" method="post" data-success="Subscribed! Thank you!" data-toastr-position="bottom-right">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+                        <input type="email" id="email" name="email" class="form-control required" placeholder="Votre adresse emil">
+                        <span class="input-group-btn">
+                                <button class="btn btn-success" type="submit">S'inscrire !</button>
+                            </span>
+                    </div>
+                </form>
+                <!-- /Newsletter Form -->
+
+                <!-- Social Icons -->
+                <div class="margin-top-20">
+                    <a href="#" class="social-icon social-icon-border social-facebook pull-left" data-toggle="tooltip" data-placement="top" title="Facebook">
+
+                        <i class="fa fa-facebook"></i>
+                        <i class="fa fa-facebook"></i>
+                    </a>
+
+                    <a href="#" class="social-icon social-icon-border social-twitter pull-left" data-toggle="tooltip" data-placement="top" title="Twitter">
+                        <i class="fa fa-twitter"></i>
+                        <i class="fa fa-twitter"></i>
+                    </a>
+
+                    <a href="#" class="social-icon social-icon-border social-gplus pull-left" data-toggle="tooltip" data-placement="top" title="Google plus">
+                        <i class="fa fa-google-plus"></i>
+                        <i class="fa fa-google-plus"></i>
+                    </a>
+
+                    <a href="#" class="social-icon social-icon-border social-rss pull-left" data-toggle="tooltip" data-placement="top" title="Rss">
+                        <i class="fa fa-rss"></i>
+                        <i class="fa fa-rss"></i>
+                    </a>
+
+                </div>
+                <!-- /Social Icons -->
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="copyright">
+        <div class="container">
+            <ul class="pull-right nomargin list-inline mobile-block">
+                <li><a href="#">Conditions d'utilisations</a></li>
+                <li>&bull;</li>
+                <li><a href="#">CGV</a></li>
+            </ul>
+            &copy; {{ date('Y') }} Success Voyance - Tous droits réservés | Réalisé avec <i class="fa fa-heart text-danger"></i> par <a href="#">Alexandre Ribes, Développeur Web sur Perpignan</a>
+        </div>
+    </div>
+</footer>
+
+
+<a href="#" id="toTop"></a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="{{ elixir('js/app.js') }}"></script>
+<script src="{{ elixir('js/components.js') }}"></script>
+<script>
+    @if( session()->has('flash_notification.message') )
+        actions.alert("{!! session('flash_notification.message') !!}", '{{ session('flash_notification.level') }}');
+    @endif
+</script>
+@yield('js')
 </body>
 </html>

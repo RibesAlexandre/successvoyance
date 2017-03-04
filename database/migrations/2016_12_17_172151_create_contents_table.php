@@ -24,6 +24,11 @@ class CreateContentsTable extends Migration
             $table->string('link');
             $table->integer('position')->nullable()->default(null);
             $table->string('container')->default('header');
+            $table->integer('parent_id')->unsigned()->index();
+        });
+
+        Schema::table('links', function(Blueprint $table) {
+            $table->foreign('parent_id')->references('id')->on('links')->onDelete('cascade');
         });
 
         Schema::create('pages', function(Blueprint $table) {
@@ -96,6 +101,10 @@ class CreateContentsTable extends Migration
         Schema::table('pages_pictures', function(Blueprint $table) {
             $table->dropForeign('pages_pictures_page_id_foreign');
             $table->dropForeign('pages_pictures_picture_id_foreign');
+        });
+
+        Schema::table('links', function(Blueprint $table) {
+            $table->dropForeign('links_parent_id_foreign');
         });
 
         Schema::drop('carousels');

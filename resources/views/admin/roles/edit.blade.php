@@ -15,7 +15,7 @@
                 <h4 class="title text-center">Mettre à jour le rôle "{{ $role->name }}"</h4>
             </div>
             <div class="content">
-                {!! BootForm::open()->action(route('admin.roles.update', ['id' => $role->id]))->id('role-form')->post() !!}
+                {!! BootForm::open()->action(route('admin.roles.update', ['id' => $role->id]))->id('role-form')->put() !!}
                 {!! BootForm::bind($role) !!}
                 @include('admin.roles.form')
                 {!! BootForm::submit('Mettre à jour le rôle', 'btn btn-success btn-block btn-fill') !!}

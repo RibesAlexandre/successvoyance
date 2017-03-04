@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\User;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -29,7 +30,7 @@ class EditPictureRequest extends FormRequest
     public function rules()
     {
         return [
-            'picture'   =>  'required|mime:png,jpg,jpeg|max:2500'
+            'picture'   =>  'required|mimes:png,jpg,jpeg|max:2500', Rule::dimensions()->maxWidth(460)->maxHeight(700),
         ];
     }
 }

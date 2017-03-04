@@ -8,6 +8,7 @@ use App\Http\Requests\User\EditPasswordRequest;
 use App\Http\Requests\User\EditPictureRequest;
 
 use Auth;
+use Illuminate\Http\Request;
 use Image;
 use App\Models\User;
 use App\Http\Controllers\Controller;
@@ -26,7 +27,7 @@ class AccountController extends Controller
      */
     public function index()
     {
-        return view('auth.account.index');
+        return view('auth.account.index')->with('user', Auth::user());
     }
 
     /**
@@ -36,7 +37,7 @@ class AccountController extends Controller
      */
     public function edit()
     {
-        return view('auth.account.account');
+        return view('auth.account.parameters')->with('user', Auth::user());
     }
 
     /**
@@ -119,19 +120,67 @@ class AccountController extends Controller
         }
 
         $picture = $request->file('picture');
-        $pictureName = str_slug(Auth::user()->full_name) . '.' . $picture->getClientOriginalExtension();
+        $pictureName = str_slug(Auth::user()->nickname) . '.' . $picture->getClientOriginalExtension();
         $image = Image::make($picture);
-        $image->resize(100, 100);
-        $image->save(public_path('uploads/avatars'), $pictureName);
+        //$image->resize(100, 100);
+        $picture->move(public_path('uploads/avatars'), $pictureName);
+        //$image->save(public_path('uploads/avatars'), $pictureName);
         Auth::user()->update([
             'avatar'    =>  $pictureName,
         ]);
 
         return response()->json([
             'success'   =>  true,
-            'content'   =>  asset('uploads/avatar/' . $pictureName),
+            'content'   =>  '<img class="img-responsive" src="' . Auth::user()->avatar() .  '" alt="Votre image de profil" />',
             'element'   =>  '#picture',
-            'method'    =>  'html'
+            'method'    =>  'html',
+            'timer'     =>  2000,
+        ]);
+    }
+
+    /**
+     * Permet à l'utilsateur de supprimer sa photo de profil
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function removePicture()
+    {
+        if( !is_null(Auth::user()->avatar) ) {
+            if( is_file(public_path('uploads/avatars/' . Auth::user()->avatar)) ) {
+                unlink(public_path('uploads/avatars/' . Auth::user()->avatar));
+            }
+
+            Auth::user()->update(['avatar' => null]);
+
+            return response()->json([
+                'success'   =>  true,
+                'content'   =>  '<img class="img-responsive" src="' . asset('imgs/components/default-avatar.png') .  '" alt="Votre image de profil" />',
+                'element'    =>  '#picture',
+                'method'    =>  'html'
+            ]);
+        }
+
+        return response()->json([
+            'success'       =>  true,
+            'alert'         =>  true,
+            'message'       =>  'Vous ne possédez actuellement aucune image de profil !',
+            'type'          =>  'error'
+        ]);
+    }
+
+    /**
+     * Mert à jour les préférences de l'utilisateur
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updatePrivacy(Request $request)
+    {
+        Auth::user()->update($request->all());
+        return response()->json([
+            'success'   =>  true,
+            'alert'     =>  true,
+            'message'   =>  'Vos préférences ont correctement été mises à jour.'
         ]);
     }
 

@@ -12,6 +12,8 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // $this->call(UsersTableSeeder::class);
-        $this->call(InsertPermission::class);
+        //$this->call(InsertPermission::class);
+        //$this->call(InsertAstrologicalsSigns::class);
+        $this->call(InsertConfiguration::class);
     }
 }

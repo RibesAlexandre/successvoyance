@@ -1,8 +1,10 @@
 {
-  "css/admin.css": "css/admin-13016b1585.css",
-  "css/app.css": "css/app-41ec07534e.css",
-  "css/components.css": "css/components-94730bf492.css",
+  "css/admin.css": "css/admin-372d8d63f0.css",
+  "css/app.css": "css/app-cc7238c385.css",
+  "css/components.css": "css/components-20f5d7face.css",
   "js/admin.js": "js/admin-0a071525f3.js",
-  "js/app.js": "js/app-c985cfc45e.js",
-  "js/components.js": "js/components-79773c6522.js"
+  "js/app.js": "js/app-2a66528b67.js",
+  "js/components.js": "js/components-abf297f4ae.js",
+  "js/laroute.js": "js/laroute-f13ef2849f.js",
+  "js/plugins.js": "js/plugins-5011605f8a.js"
 }
