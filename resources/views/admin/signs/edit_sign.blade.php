@@ -39,7 +39,7 @@
     @parent
     <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js"></script>
     <script src="{{ asset('js/plugins.js') }}"></script>
-    <script src="{{ elixir('js/laroute.js') }}"></script>
+    <script src="{{ asset('js/laroute.js') }}"></script>
     <script>
 		app.loadSummerNote('#sign-form', '#summernote');
 		app.removePicture('#summernote');

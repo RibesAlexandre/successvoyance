@@ -6,3 +6,10 @@
 Homestead.json
 Homestead.yaml
 .env
+
+public/uploads
+public/uploads/
+public/uploads/*
+public/build
+public/build/
+public/build/*
