@@ -20,7 +20,7 @@ var scripts = {
 	//datetimepicker: './bower_components/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
 	//moment: './bower_components/moment/min/moment.min.js',
 	//moment_fr: './bower_components/moment/locale/fr.js'
-}
+}npm
 
 elixir(function(mix) {
 	mix
