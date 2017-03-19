@@ -173,6 +173,9 @@ return [
         UxWeb\SweetAlert\SweetAlertServiceProvider::class,
         Lord\Laroute\LarouteServiceProvider::class,
         Laracasts\Flash\FlashServiceProvider::class,
+        DevDojo\Chatter\ChatterServiceProvider::class,
+        GrahamCampbell\Markdown\MarkdownServiceProvider::class,
+        Barryvdh\Debugbar\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -241,12 +244,15 @@ return [
         'Date'          => Jenssegers\Date\Date::class,
         'Image'         => Intervention\Image\Facades\Image::class,
         'Alert'         => UxWeb\SweetAlert\SweetAlert::class,
+        'Markdown'      => GrahamCampbell\Markdown\Facades\Markdown::class,
+        'Debugbar'      => Barryvdh\Debugbar\Facade::class,
 
         /**
          * Custom
          */
         'Sync'      =>  \App\Services\Facades\Sync::class,
         'Audiotel'  =>  \App\Services\Facades\Audiotel::class,
+        'Utils'     =>  \App\Services\Facades\Utils::class,
     ],
 
 ];

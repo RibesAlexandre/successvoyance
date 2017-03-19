@@ -48,6 +48,7 @@ Route::get('/voyance-par-email', ['uses' => 'TellingController@email', 'as' => '
 Route::get('/voyance-par-telephone', ['uses' => 'TellingController@phone', 'as' => 'telling.phone']);
 
 //  Forums
+/*
 Route::group(['prefix' => 'forum', 'namespace' => 'Forum'], function() {
     Route::get('/', ['uses' => 'ForumsController@index', 'as' => 'forum.index']);
     Route::get('/{forum}/', ['uses' => 'ForumsController@forum', 'as' => 'forum.forum']);
@@ -61,6 +62,7 @@ Route::group(['prefix' => 'forum', 'namespace' => 'Forum'], function() {
     Route::get('/moderate/{topic}', ['uses' => 'TopicsController@moderate']);
     Route::get('/moderate/{post}', ['uses' => 'PostsController@moderate']);
 });
+*/
 
 /**
  * Administration

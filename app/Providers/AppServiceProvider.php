@@ -35,5 +35,9 @@ class AppServiceProvider extends ServiceProvider
         App::bind('Audiotel', function() {
             return new App\Services\Audiotel();
         });
+
+        App::bind('Utils', function() {
+            return new App\Services\Utils();
+        });
     }
 }

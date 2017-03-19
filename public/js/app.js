@@ -530,7 +530,7 @@ var app = {
 				}
 			});
 		}
-	},
+	}
 	
 	/**
 	 * Permet de supprimer une photo dans l'éditeur, en la retirant également sur summernote

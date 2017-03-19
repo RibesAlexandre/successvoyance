@@ -13,3 +13,6 @@ public/uploads/*
 public/build
 public/build/
 public/build/*
+
+storage/
+storage/*

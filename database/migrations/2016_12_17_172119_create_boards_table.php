@@ -13,6 +13,7 @@ class CreateBoardsTable extends Migration
      */
     public function up()
     {
+        /*
         Schema::create('forum_categories', function(Blueprint $table) {
             $table->increments('id');
             $table->string('name');
@@ -101,6 +102,7 @@ class CreateBoardsTable extends Migration
             $table->foreign('topic_id')->references('id')->on('forum_topics')->onDelete('cascade');
             $table->foreign('forum_id')->references('id')->on('forum_forums')->onDelete('cascade');
         });
+        */
     }
 
     /**
