@@ -20,7 +20,10 @@
         "uxweb/sweet-alert": "^1.4",
         "lord/laroute": "^2.3",
         "caouecs/laravel-lang": "~3.0",
-        "laracasts/flash": "^2.0"
+        "laracasts/flash": "^2.0",
+        "devdojo/chatter": "0.2.*",
+        "graham-campbell/markdown": "^7.1",
+        "barryvdh/laravel-debugbar": "^2.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

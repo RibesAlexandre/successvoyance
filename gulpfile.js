@@ -25,11 +25,17 @@ var scripts = {
 elixir(function(mix) {
 	mix
 		//.sass('app.scss')
+		/*
 		.styles([
 			'essentials.css',
 			'layout.css',
 			'header.css',
-			'color.css'
+			'color.css',
+			'shop.css'
+		], 'public/css/app.css')
+		*/
+		.less([
+			'app.less',
 		], 'public/css/app.css')
 		.sass([
 			'components/*.scss',
