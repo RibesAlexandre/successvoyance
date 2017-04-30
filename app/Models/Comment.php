@@ -2,6 +2,8 @@
 namespace App\Models;
 
 use App\Presenters\DatePresenter;
+use App\Presenters\CommentPresenter;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -12,9 +14,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Comment extends Model
 {
-    use DatePresenter, SoftDeletes;
+    use DatePresenter, SoftDeletes, CommentPresenter;
 
-    protected $fillable = ['content', 'user_id', 'soothsayer_id', 'horoscope_id', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['content', 'user_id', 'soothsayer_id', 'horoscope_id', 'parent_id', 'stars', 'created_at', 'updated_at', 'deleted_at'];
 
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
@@ -46,5 +48,15 @@ class Comment extends Model
     public function horoscope()
     {
         return $this->belongsTo(Horoscope::class, 'horoscope_id');
+    }
+
+    /**
+     * Réponses aux commentaires
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function responses()
+    {
+        return $this->hasMany(Comment::class, 'parent_id');
     }
 }

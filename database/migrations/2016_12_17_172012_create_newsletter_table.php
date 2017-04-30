@@ -13,7 +13,7 @@ class CreateNewsletterTable extends Migration
      */
     public function up()
     {
-        Schema::create('newsletter', function(Blueprint $table) {
+        Schema::create('newsletters', function(Blueprint $table) {
             $table->increments('id');
             $table->string('email');
             $table->integer('user_id')->unsigned()->index()->nullable();
@@ -21,7 +21,7 @@ class CreateNewsletterTable extends Migration
             $table->softDeletes();
         });
 
-        Schema::table('newsletter', function(Blueprint $table) {
+        Schema::table('newsletters', function(Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }

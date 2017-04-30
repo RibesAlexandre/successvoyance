@@ -29,7 +29,7 @@
 <body>
 
 <div class="wrapper">
-    <div class="sidebar" data-color="blue" data-image="{{ asset('imgs/admin/design/sidebar-5.jpg') }}">
+    <div class="sidebar" data-color="green" data-image="{{ asset('imgs/admin/design/sidebar-5.jpg') }}">
 
         <div class="sidebar-wrapper">
             <div class="logo">
@@ -39,6 +39,22 @@
             </div>
 
             <ul class="nav">
+                <li>
+                    <a data-toggle="collapse" href="#test" class="collapsed" aria-expanded="false">
+                        <i class="fa fa-tachometer"></i>
+                        <p>Test <b class="caret"></b></p>
+                    </a>
+                    <div class="collapse" id="test" aria-expanded="false" style="height: 0px">
+                        <ul class="nav">
+                            <li>
+                                <a href="#test2">Lien 1</a>
+                            </li>
+                            <li>
+                                <a href="#test3">Lien 3</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
                 <li class="active">
                     <a href="{{ route('admin.index') }}">
                         <i class="fa fa-tachometer"></i>

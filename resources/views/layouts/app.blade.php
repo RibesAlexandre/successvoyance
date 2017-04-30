@@ -12,6 +12,7 @@
     <title>@yield('title') - {{ config('app.name') }}</title>
 
     <!-- Styles -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400%7CRaleway:300,400,500,600,700%7CLato:300,400,400italic,600,700" rel="stylesheet" type="text/css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="{{ elixir('css/app.css') }}" rel="stylesheet">
@@ -66,7 +67,8 @@
         <div class="search-box over-header">
             <a id="closeSearch" href="#" class="fa fa-times"></a>
 
-            <form action="#" method="get">
+            <form action="{{ route('search.post') }}" method="post">
+                {!! csrf_field() !!}
                 <input type="text" class="form-control" placeholder="Rechercher" />
             </form>
         </div>
@@ -103,16 +105,29 @@
             </div>
         </header>
     </div>
-    <section class="page-header page-header-xs">
+    <section class="page-header page-header-xs bread{{ isInRoute('home') ? ' hidden' : '' }}">
         <div class="container">
 
-            <ol class="breadcrumb breadcrumb-inverse">
+            <h1>@yield('pageTitle')</h1>
+
+            <ol class="breadcrumb">
                 <li><i class="fa fa-home"></i> <a href="{{ route('home') }}">{{ $cfg['name'] }}</a></li>
                 @stack('breadcrumbs')
             </ol>
 
         </div>
     </section>
+
+    {{--
+    <section class="page-header page-header-xs bread{{ isInRoute('home') ? ' hidden' : '' }}">
+        <div class="container">
+            <ol class="breadcrumb breadcrumb-inverse">
+                <li><i class="fa fa-home"></i> <a href="{{ route('home') }}">{{ $cfg['name'] }}</a></li>
+                @stack('breadcrumbs')
+            </ol>
+        </div>
+    </section>
+    --}}
 
     @yield('content')
 </div>
@@ -194,12 +209,13 @@
                 <h4 class="letter-spacing-1">Restez connecté !</h4>
                 <p>Inscrivez vous à notre newsletter pour profiter de nos promotions et des nouveautés du site.</p>
 
-                <form class="validate" action="#" method="post" data-success="Subscribed! Thank you!" data-toastr-position="bottom-right">
+                <form class="validate" action="{{ route('newsletter.post') }}" method="post" data-success="Subscribed! Thank you!" data-toastr-position="bottom-right" id="newsletter-form">
+                    {{ csrf_field() }}
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                        <input type="email" id="email" name="email" class="form-control required" placeholder="Votre adresse emil">
+                        <input type="email" id="newsletter_email" name="newsletter_email" class="form-control required" placeholder="Votre adresse emil">
                         <span class="input-group-btn">
-                                <button class="btn btn-success" type="submit">S'inscrire !</button>
+                                <button class="btn btn-success" type="submit" id="newsletter-submit">S'inscrire !</button>
                             </span>
                     </div>
                 </form>
@@ -249,6 +265,7 @@
     </div>
 </footer>
 
+@yield('components')
 
 <a href="#" id="toTop"></a>
 
@@ -260,6 +277,7 @@
     @if( session()->has('flash_notification.message') )
         actions.alert("{!! session('flash_notification.message') !!}", '{{ session('flash_notification.level') }}');
     @endif
+    app.submitForm('#newsletter-form', '#newsletter-submit');
 </script>
 @yield('js')
 </body>

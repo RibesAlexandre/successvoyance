@@ -36,16 +36,34 @@ Route::group(['prefix' => 'mon-compte', 'namespace' => 'Auth', 'middleware' => '
 Route::get('/contact', ['uses' => 'SiteController@contact', 'as' => 'contact.get']);
 Route::post('/contact', ['uses' => 'SiteController@postContact', 'as' => 'contact.post']);
 
-//  Enregistrement dans la newsletter
-Route::post('newsletter', ['uses' => 'SiteController@postNewsletter', 'as' => 'newsletter.post']);
+Route::get('recherche', ['uses' => 'SiteController@search', 'as' => 'search.get']);
+Route::post('recherche', ['uses' => 'SiteController@postSearch', 'as' => 'search.post']);
 
-Route::get('/signes-astrologiques', ['uses' => 'SignsController@index', 'as' => 'signs.index']);
-Route::get('/signes-astrologiques/{sign}', ['uses' => 'SignsController@sign', 'as' => 'signs.show']);
-Route::get('/signes-astrologiques/{sign}/horoscopes', ['uses' => 'SignsController@horoscopes']);
+//  Enregistrement dans la newsletter
+Route::post('newsletter/inscription', ['uses' => 'SiteController@newsletter', 'as' => 'newsletter.post']);
+Route::get('newsletter/desinscription', ['uses' => 'SiteController@unsuscribe', 'as' => 'newsletter.unsuscribe']);
+Route::post('newsletter/desinscription', ['uses' => 'SiteController@postUnsuscribe', 'as' => 'newsletter.unsuscribe.post']);
+
+Route::get('signes-astrologiques', ['uses' => 'SignsController@index', 'as' => 'signs.index']);
+Route::get('signes-astrologiques/{sign}', ['uses' => 'SignsController@show', 'as' => 'signs.show']);
+Route::get('signes-astrologiques/{sign}/horoscopes', ['uses' => 'SignsController@horoscopes', 'as' => 'signs.horoscopes']);
 
 //  Voyance
-Route::get('/voyance-par-email', ['uses' => 'TellingController@email', 'as' => 'telling.email']);
-Route::get('/voyance-par-telephone', ['uses' => 'TellingController@phone', 'as' => 'telling.phone']);
+Route::get('voyance-par-email', ['uses' => 'TellingController@email', 'as' => 'telling.email']);
+Route::get('voyance-par-telephone', ['uses' => 'TellingController@phone', 'as' => 'telling.phone']);
+
+//  Voyants
+Route::get('voyants', ['uses' => 'SoothsayersController@index', 'as' => 'soothsayers.index']);
+Route::get('voyants/{slug}', ['uses' => 'SoothsayersController@show', 'as' => 'soothsayers.show']);
+Route::get('voyants/{id}/comments', ['uses' => 'SoothsayersController@loadComments', 'as' => 'soothsayers.comments']);
+Route::post('voyants/{id}/vote', ['uses' => 'SoothsayersController@rate', 'as' => 'soothsayers.rate']);
+Route::get('voyants/{id}/favori', ['uses' => 'SoothsayersController@favorite', 'as' => 'soothsayers.favorite']);
+
+//  Commentaires
+Route::get('commentaire/{id}/edit', ['uses' => 'CommentsController@edit', 'as' => 'comments.edit']);
+Route::post('commentaire', ['uses' => 'CommentsController@store', 'as' => 'comments.store']);
+Route::put('commentaire/{id}', ['uses' => 'CommentsController@update', 'as' => 'comments.update']);
+Route::delete('commentaire/{id}', ['uses' => 'CommentsController@destroy', 'as' => 'comments.destroy']);
 
 //  Forums
 /*
@@ -147,4 +165,4 @@ Route::group(['prefix' => 'dashboard-123', 'namespace' => 'Admin'], function() {
 });
 
 //  Pages du site
-Route::get('{slug}', ['uses' => 'SiteController@page', 'as' => 'page']);
+Route::get('pages/{slug}', ['uses' => 'SiteController@page', 'as' => 'page']);

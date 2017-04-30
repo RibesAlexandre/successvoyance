@@ -43,6 +43,7 @@ class CreateSoothsayerTable extends Migration
             $table->increments('id');
             $table->text('content');
             $table->integer('user_id')->unsigned()->index();
+            $table->integer('parent_id')->unsigned()->index();
             $table->integer('soothsayer_id')->unsigned()->index()->nullable();
             $table->integer('horoscope_id')->unsigned()->index()->nullable();
             $table->timestamps();
@@ -53,6 +54,7 @@ class CreateSoothsayerTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('soothsayer_id')->references('id')->on('soothsayers')->onDelete('cascade');
             $table->foreign('horoscope_id')->references('id')->on('horoscopes')->onDelete('cascade');
+            $table->foreign('parent_id')->references('id')->on('comments')->onDelete('cascade');
         });
     }
 

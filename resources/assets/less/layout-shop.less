@@ -147,9 +147,10 @@ div.shop-item>.thumbnail {
 	}
 
 	div.shop-item>.thumbnail>a.shop-item-image>img {
+		width: 100%;
+		border-radius: 3px;
+		-moz-border-radius: 3px;
 		-webkit-border-radius: 3px;
-		   -moz-border-radius: 3px;
-				border-radius: 3px;
 	}
 
 	/* double image transition effect */
@@ -289,6 +290,14 @@ div.shop-item-price>span {
 	display:inline-block;
 	padding:0 10px;
 	font-weight:400;
+
+	@media( max-width: @screen-phone ) {
+		display: block;
+		text-align: center;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 20px;
+	}
 }
 
 /* list item buttons */

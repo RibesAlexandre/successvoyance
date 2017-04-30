@@ -105,6 +105,66 @@ class User extends Authenticatable
     }
 
     /**
+     * Commentaires de l'utilisateur
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'user_id');
+    }
+
+    /**
+     * Votes de l'utilisateur
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function ratings()
+    {
+        return $this->belongsTo(Rating::class, 'user_id');
+    }
+
+    /**
+     * Voyant associé à l'utilisateur
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function soothsayer()
+    {
+        return $this->hasOne(Soothsayer::class, 'user_id');
+    }
+
+    /**
+     * Voyants favoris
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function favoritesSoothsayers()
+    {
+        return $this->belongsToMany(Soothsayer::class, 'soothsayers_favorites', 'user_id');
+    }
+
+    /**
+     * Retourne tous les achats emails
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function emails()
+    {
+        return $this->hasMany(TellingEmailUser::class, 'user_id');
+    }
+
+    /**
+     * Retourne le dernier achat email
+     *
+     * @return mixed
+     */
+    public function lastEmail()
+    {
+        return $this->emails()->latest()->first();
+    }
+
+    /**
      * Formatage de la date de naissance
      *
      * @param $value

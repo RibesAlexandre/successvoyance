@@ -4,6 +4,7 @@ namespace App\Models\Content;
 use App\Presenters\DatePresenter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use AstritZeqiri\LaravelSearchable\Traits\Searchable;
 
 /**
  * Class Page
@@ -12,11 +13,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Page extends Model
 {
-    use SoftDeletes, DatePresenter;
+    use SoftDeletes, DatePresenter, Searchable;
 
     protected $fillable = ['name', 'slug', 'content', 'created_at', 'updated_at', 'deleted_at', 'deletable'];
 
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+
+    protected static $searchOn = ['name', 'content'];
 
     /*
      * Images de la page

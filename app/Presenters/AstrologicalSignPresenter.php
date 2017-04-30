@@ -1,6 +1,8 @@
 <?php
 namespace App\Presenters;
 
+use Date;
+
 /**
  * Class AstrologicalSignPresenter
  * @author Alexandre Ribes
@@ -17,5 +19,25 @@ trait AstrologicalSignPresenter
     public function getLogoAttribute($value)
     {
         return asset('uploads/signs/' . $value);
+    }
+
+    /**
+     * Date de début du signe
+     *
+     * @return mixed
+     */
+    public function getSignBeginDateAttribute()
+    {
+        return Date::parse($this->begin_at)->format('d F');
+    }
+
+    /**
+     * Date de fin du signe
+     *
+     * @return mixed
+     */
+    public function getSignEndingDateAttribute()
+    {
+        return Date::parse($this->ending_at)->format('d F');
     }
 }

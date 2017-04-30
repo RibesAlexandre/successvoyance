@@ -1,0 +1,66 @@
+@import 'variables';
+
+.soothsayers {
+    margin: 0;
+    padding: 0;
+
+    li.soothsayer {
+        -moz-box-shadow: 0 0px 4px @primary-color;
+        -webkit-box-shadow: 0 0px 4px @primary-color;
+        -o-box-shadow: 0 0px 4px @primary-color;
+        box-shadow: 0 0px 4px @primary-color;
+        filter:progid:DXImageTransform.Microsoft.Shadow(color=@primary-color, Direction=116, Strength=5);
+        display: block;
+        min-height: 180px;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 6px;
+
+        &:nth-child(2n) {
+            background-color: lighten(@primary-color, 50%);
+        }
+
+        .media {
+            .media-left {
+                img {
+                    max-width: 150px;
+                    border-radius: 50%;
+                    padding: 4px;
+                    margin-bottom: 20px;
+                    line-height: 1.42857143;
+                    background-color: #fff;
+                    border: 1px solid #ddd;
+                    /* border-radius: 4px; */
+                    -webkit-transition: border .2s ease-in-out;
+                    -o-transition: border .2s ease-in-out;
+                    transition: border .2s ease-in-out;
+
+                    @media( max-width: @screen-phone ) {
+                        max-width: 50px;
+                    }
+                }
+            }
+
+            .media-body {
+                .skills {
+                    float: right;
+                }
+
+                p {
+                    font-size: 12px;
+                    text-align: justify;
+                    font-style: italic;
+                }
+            }
+        }
+
+        .contact {
+            text-align: center;
+
+            .label {
+                font-size: 20px;
+                padding: 10px;
+            }
+        }
+    }
+}

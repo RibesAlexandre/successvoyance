@@ -1,7 +1,10 @@
 /** Boxed
  **************************************************************** **/
+@import 'variables';
+
 body.boxed {
-	background-color:#f1f2f7;
+	//background-color:#f1f2f7;
+	background-color: lighten(@primary-color, 50%);
 }
 body.boxed section {
 	background-color:#fff;
@@ -13,9 +16,14 @@ body.boxed #wrapper {
 	margin-top:50px;
 	margin-bottom:50px;
 
-	-webkit-border-radius: 3px;
-	   -moz-border-radius: 3px;
-			border-radius: 3px;
+	-moz-box-shadow: 0 0px 4px @primary-color;
+	-webkit-box-shadow: 0 0px 4px @primary-color;
+	-o-box-shadow: 0 0px 4px @primary-color;
+	box-shadow: 0 0px 4px @primary-color;
+	filter:progid:DXImageTransform.Microsoft.Shadow(color=@primary-color, Direction=116, Strength=5);
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
 }
 @media only screen and (max-width: 992px) {
 	body.boxed #wrapper {

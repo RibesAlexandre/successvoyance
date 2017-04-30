@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Presenters\DatePresenter;
 use App\Presenters\AstrologicalSignPresenter;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use AstritZeqiri\LaravelSearchable\Traits\Searchable;
 
 
 /**
@@ -18,13 +19,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class AstrologicalSign extends Model
 {
-    use SoftDeletes, AstrologicalSignPresenter, DatePresenter;
+    use SoftDeletes, AstrologicalSignPresenter, DatePresenter, Searchable;
 
     protected $table = 'astrological_signs';
 
     protected $fillable = ['name', 'slug', 'logo', 'content', 'begin_at', 'ending_at', 'deleted_at'];
 
     protected $dates = ['begin_at', 'ending_at', 'deleted_at'];
+
+    protected static $searchOn = ['name'];
 
     /**
      * Horoscopes des signes
@@ -38,7 +41,7 @@ class AstrologicalSign extends Model
 
     public function lastHoroscope()
     {
-        return $this->hasOne(Horoscope::class)->orderBy('created_at', 'DESC')->first();
+        return $this->hasMany(Horoscope::class, 'sign_id')->orderBy('created_at', 'DESC')->first();
     }
 
     /**

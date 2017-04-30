@@ -38,12 +38,12 @@ class RouteServiceProvider extends ServiceProvider
     {
         parent::boot();
 
-        Route::model('user', User::class);
+        //Route::model('user', User::class);
         //Route::model('category', Category::class);
         //Route::model('forum', Forum::class);
         //Route::model('topic', Topic::class);
-        Route::model('sign', AstrologicalSign::class);
-        Route::model('horoscope', Horoscope::class);
+        //Route::model('sign', AstrologicalSign::class);
+        //Route::model('horoscope', Horoscope::class);
     }
 
     /**

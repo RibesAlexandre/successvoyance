@@ -120,7 +120,7 @@ return [
         'email'                 => 'Adresse e-mail',
         'first_name'            => 'Prénom',
         'last_name'             => 'Nom',
-        'firstname'             =>  'Prénom',
+        'firstname'             => 'Prénom',
         'password'              => 'Mot de passe',
         'password_confirmation' => 'Confirmation du mot de passe',
         'city'                  => 'Ville',
@@ -149,6 +149,8 @@ return [
         'ending_at'             =>  'Date de fin',
         'picture'               =>  'Photo',
         'old_password'          =>  'Ancien mot de passe',
+        'topic'                 =>  'Sujet',
+        'content'               =>  'Contenu',
     ],
 
 ];

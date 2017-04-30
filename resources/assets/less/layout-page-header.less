@@ -1,18 +1,25 @@
 /** Page Header
  **************************************************************** **/
+@import 'variables';
+
 section.page-header {
 	position: relative;
 	padding: 50px 0 50px 0;
 	border-top: 0;
 	margin-top: 0;
 	margin-bottom: 0 !important;
-	background-color: rgba(0,0,0,0.05);
+	//background-color: rgba(0,0,0,0.05);
 	border-bottom: rgba(0,0,0,0.05) 1px solid;
 
 	-webkit-transition: all 0s;
 	   -moz-transition: all 0s;
 		 -o-transition: all 0s;
 			transition: all 0s;
+
+	&.bread {
+		background-color: @primary-color !important;
+	}
+
 }
 
 	/* shadows */
@@ -181,14 +188,13 @@ section.page-header {
 		}
 	}
 
-	
-	
-
 section.page-header h1 {
 	margin:0;
 	padding:0;
 	font-size:26px;
 	font-weight:300;
+	color: #fff;
+	font-family: @H1-H6-font-family !important;
 }
 
 section.page-header .breadcrumb {
@@ -199,19 +205,38 @@ section.page-header .breadcrumb {
 	background:transparent;
 	margin-bottom:0;
 	z-index:10;
+	color: #fff;
 }
 section.page-header .breadcrumb>li+li:before {
 	content:"•";
 }
 section.page-header .breadcrumb a {
-	color:#333;
+	//color:#333;
+	color: #fff;
+
+	&:hover {
+		color: #fff !important;
+		text-decoration: underline;
+	}
 }
 	section.page-header.parallax .breadcrumb li.active,
 	section.page-header.parallax .breadcrumb a {
-		color:#fff;
+		color: darken(#fff, 10%) !important;
 	}
 section.page-header .breadcrumb {
 	right:0; left:auto;
+
+	li {
+		&.active {
+			color: #fff !important;
+			font-weight: bold;
+
+			a {
+				color: #fff !important;
+				font-weight: bold;
+			}
+		}
+	}
 }
 section.page-header .breadcrumb.breadcrumb-inverse {
 	left:0; right:auto;
@@ -222,7 +247,7 @@ section.page-header .breadcrumb.breadcrumb-center {
 	margin-top:20px;
 }
 section.dark.page-header .breadcrumb a {
-	color:#ccc;
+	color:#fff;
 }
 @media only screen and (max-width: 767px) {
 	section.page-header {

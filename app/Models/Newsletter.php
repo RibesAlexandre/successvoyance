@@ -13,7 +13,7 @@ class Newsletter extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'newsletter';
+    protected $table = 'newsletters';
 
     protected $fillable = ['email', 'user_id', 'deleted_at'];
 

@@ -326,6 +326,11 @@ var app = {
 			cache: false,
 			headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
 		});
+		
+		$(function () {
+			$('[data-toggle="tooltip"]').tooltip()
+		});
+		
 		this.delete();
 		this.loadJson();
 		this.loadDataOnClick();
@@ -338,7 +343,7 @@ var app = {
 	 * @param form
 	 * @param submit
 	 */
-	submitForm: function(form, submit) {
+	submitForm: function(form, submit, callback) {
 		$('body').on('click', submit, function(e) {
 			e.preventDefault();
 			
@@ -350,6 +355,9 @@ var app = {
 				$('#' + f.attr('id') + ' .form-group').removeClass('has-error');
 				$('#' + f.attr('id') + ' .return-error').remove();
 			}
+			
+			var btnText = $(submit).html();
+			$(submit).html('<i class="fa fa-spinner fa-spin fa-fw"></i>');
 			
 			$.ajax({
 				url: f.attr('action'),
@@ -375,9 +383,15 @@ var app = {
 					
 					setTimeout(function() {
 						if( typeof response.alert != 'undefined' ) {
-							var alertType = 'success';
+							var alertType = '';
 							if( typeof response.type != 'undefined' ) {
 								alertType = response.type;
+							} else {
+								if( response.success ) {
+									alertType = 'success';
+								} else {
+									alertType = 'error';
+								}
 							}
 							toastr[alertType](response.message);
 						} else if( typeof response.content != 'undefined' ) {
@@ -407,6 +421,11 @@ var app = {
 							//}, timer);
 						}
 					}, timer);
+					$(submit).html(btnText);
+					
+					if( typeof callback != 'undefined' && typeof callback == 'function' ) {
+						callback();
+					}
 				},
 				error :function(response) {
 					var $errorsReturn = '';
@@ -419,6 +438,7 @@ var app = {
 					});
 					
 					f.prepend('<div class="alert alert-danger ' + f.attr('id') + '-errors"><ul>' + $errorsReturn + '</ul></di>');
+					$(submit).html(btnText);
 				}
 			});
 		});
@@ -530,7 +550,7 @@ var app = {
 				}
 			});
 		}
-	}
+	},
 	
 	/**
 	 * Permet de supprimer une photo dans l'éditeur, en la retirant également sur summernote
@@ -565,6 +585,26 @@ var app = {
 					toastr[response.type](response.message);
 				} else {
 					$(response.element)[response.method](response.content);
+				}
+			});
+		});
+	},
+	
+	/**
+	 * Permet de charger plus d'éléments
+	 */
+	loadMore: function() {
+		$('body').on('click', '[data-action=load-more]', function(e) {
+			e.preventDefault();
+			var $this = $(this);
+			$.get($this.attr('href'), function(response) {
+				console.log(response);
+				if( response.count > 0 ) {
+					$this.attr('href', response.href);
+					$(response.element)[response.method](response.content);
+				} else {
+					$(response.element)[response.method](response.content);
+					$this.addClass('disabled');
 				}
 			});
 		});
@@ -628,7 +668,8 @@ var app = {
 										toastr['success'](response.message);
 									}
 								} else {
-									toastr['error']('Une erreur est survenue durant la suppression de l\'élément');
+									var message = typeof response.message == 'undefined' ? 'Une erreur est survenue durant la suppression de l\'élément' : response.message;
+									toastr['error'](message);
 								}
 							}
 						})
