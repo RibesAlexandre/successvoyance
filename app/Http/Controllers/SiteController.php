@@ -46,8 +46,6 @@ class SiteController extends Controller
             return Soothsayer::with('commentsCount', 'favoritesCount')->get();
         });
 
-        dd($this->consultants);
-
         foreach( $soothsayersData as $s ) {
             $soothsayers[$s->slug] = [
                 'id'            =>  $s->id,
