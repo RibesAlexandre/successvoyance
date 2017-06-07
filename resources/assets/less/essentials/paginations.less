@@ -1,12 +1,14 @@
 /** 32. Paginations
 *************************************************** **/
+@import '../variables';
+
 .pagination > li > a:hover,
 .pagination > li > span:hover,
 .pagination > li > a:focus,
 .pagination > li > span:focus {
 	background: rgba(0,0,0,0.05);
 }
-.pagination > li > a {
+.pagination > li > a, .pagination > li {
 	margin-right:4px;
 	color:#666 !important;
 
@@ -18,6 +20,21 @@
 .pagination > li.active>a {
 	border-color:#ddd;
 	color:#fff !important;
+
+	span {
+		background-color: @brand-primary !important;
+		border-color: @brand-primary !important;
+	}
+}
+
+.pagination > li.active {
+	background-color: @brand-primary !important;
+	border-color: @brand-primary !important;
+}
+
+.pagination > li.disabled {
+	background-color: #ccc !important;
+	border-color: #ccc !important;
 }
 
 section.dark .pagination > li,

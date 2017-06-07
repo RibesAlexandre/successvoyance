@@ -11,27 +11,27 @@
     @else
         <li class="list-group-item"><a href="{{ route('account') }}"><i class="fa fa-eye"></i> Son profil</a></li>
     @endif
-    <li class="list-group-item"><a href="page-profile-comments.html"><i class="fa fa-comments-o"></i> Commentaires</a></li>
-    <li class="list-group-item"><a href="page-profile-history.html"><i class="fa fa-history"></i> Historique</a></li>
+    <li class="list-group-item"><a href="{{ route('users.comments', ['id' => $user->id]) }}"><i class="fa fa-comments-o"></i> Commentaires</a></li>
     @if( Auth::check() && Auth::id() == $user->id )
-        <li class="list-group-item{{ active('account.edit') }}"><a href="{{ route('account.edit') }}"><i class="fa fa-gears"></i> Paramètres</a></li>
+    <li class="list-group-item{{ active('account.emails') }}"><a href="{{ route('account.emails') }}"><i class="fa fa-paper-plane"></i> Emails Voyance</a></li>
+    <li class="list-group-item{{ active('account.edit') }}"><a href="{{ route('account.edit') }}"><i class="fa fa-gears"></i> Paramètres</a></li>
     @endif
 </ul>
 
 <div class="box-light margin-bottom-30">
     <div class="row margin-bottom-20">
         <div class="col-md-4 col-sm-4 col-xs-4 text-center bold">
-            <h2 class="size-30 margin-top-10 margin-bottom-0 font-raleway">12</h2>
+            <h2 class="size-30 margin-top-10 margin-bottom-0 font-raleway">{{ $user->commentsCount }}</h2>
             <h3 class="size-11 margin-top-0 margin-bottom-10 text-info">commentaires</h3>
         </div>
 
         <div class="col-md-4 col-sm-4 col-xs-4 text-center bold">
-            <h2 class="size-30 margin-top-10 margin-bottom-0 font-raleway">22</h2>
+            <h2 class="size-30 margin-top-10 margin-bottom-0 font-raleway">{{ $user->topicsCount }}</h2>
             <h3 class="size-11 margin-top-0 margin-bottom-10 text-info">sujets</h3>
         </div>
 
         <div class="col-md-4 col-sm-4 col-xs-4 text-center bold">
-            <h2 class="size-30 margin-top-10 margin-bottom-0 font-raleway">32</h2>
+            <h2 class="size-30 margin-top-10 margin-bottom-0 font-raleway">{{ $user->messagesCount }}</h2>
             <h3 class="size-11 margin-top-0 margin-bottom-10 text-info">messages</h3>
         </div>
     </div>

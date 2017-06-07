@@ -24,7 +24,7 @@ blockquote {
 }
 
 a {
-    color: #3869D4;
+    color: #5d8f37;
 }
 
 a img {
@@ -76,7 +76,8 @@ img {
 /* Layout */
 
 .wrapper {
-    background-color: #f5f8fa;
+    /*background-color: #5d8f37; */
+    background-color: #e1efd6;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -102,7 +103,7 @@ img {
 }
 
 .header a {
-    color: #bbbfc3;
+    color: #f9f9f9;
     font-size: 19px;
     font-weight: bold;
     text-decoration: none;
@@ -158,7 +159,7 @@ img {
 }
 
 .footer p {
-    color: #AEAEAE;
+    color: #2F3133;
     font-size: 12px;
     text-align: center;
 }
@@ -219,11 +220,11 @@ img {
 }
 
 .button-green {
-    background-color: #2ab27b;
-    border-top: 10px solid #2ab27b;
-    border-right: 18px solid #2ab27b;
-    border-bottom: 10px solid #2ab27b;
-    border-left: 18px solid #2ab27b;
+    background-color: #5d8f37;
+    border-top: 10px solid #5d8f37;
+    border-right: 18px solid #5d8f37;
+    border-bottom: 10px solid #5d8f37;
+    border-left: 18px solid #5d8f37;
 }
 
 .button-red {
@@ -241,8 +242,15 @@ img {
 }
 
 .panel-content {
-    background-color: #EDEFF2;
+    /*background-color: #EDEFF2; */
+    background-color: #e1efd6;
+    border-radius: 6px;
     padding: 16px;
+    -moz-box-shadow: 0 0px 4px #5d8f37;
+    -webkit-box-shadow: 0 0px 4px #5d8f37;
+    -o-box-shadow: 0 0px 4px #5d8f37;
+    box-shadow: 0 0px 4px #5d8f37;
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#5d8f37, Direction=116, Strength=5);
 }
 
 .panel-item {

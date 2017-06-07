@@ -77,6 +77,51 @@ trait UserPresenter
     }
 
     /**
+     * Nombre de commentaires de l'utilisateur
+     *
+     * @return int
+     */
+    public function getCommentsCountAttribute()
+    {
+        if( !array_key_exists('countComments', $this->relations) ) {
+            $this->load('countComments');
+        }
+
+        $related = $this->getRelation('countComments');
+        return ($related) ? (int) $related->aggregate : 0;
+    }
+
+    /**
+     * Nombre de sujets de l'utilisateur
+     *
+     * @return int
+     */
+    public function getTopicsCountAttribute()
+    {
+        if( !array_key_exists('countTopics', $this->relations) ) {
+            $this->load('countTopics');
+        }
+
+        $related = $this->getRelation('countTopics');
+        return ($related) ? (int) $related->aggregate : 0;
+    }
+
+    /**
+     * Nombre de messages de l'utilisateur
+     *
+     * @return int
+     */
+    public function getMessagesCountAttribute()
+    {
+        if( !array_key_exists('countMessages', $this->relations) ) {
+            $this->load('countMessages');
+        }
+
+        $related = $this->getRelation('countMessages');
+        return ($related) ? (int) $related->aggregate : 0;
+    }
+
+    /**
      * Determine whether the user can do specific permission that given by name parameter.
      *
      * @param $name

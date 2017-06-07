@@ -40,4 +40,24 @@ trait AstrologicalSignPresenter
     {
         return Date::parse($this->ending_at)->format('d F');
     }
+
+    /**
+     * Date pour la comparaison avec le signe
+     *
+     * @return mixed
+     */
+    public function getSignBeginMonthAttribute()
+    {
+        return Date::parse($this->begin_at)->format('m-d');
+    }
+
+    /**
+     * Date pour la comparaison avec le signe
+     *
+     * @return mixed
+     */
+    public function getSignEndingMonthAttribute()
+    {
+        return Date::parse($this->ending_at)->format('m-d');
+    }
 }

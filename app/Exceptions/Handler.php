@@ -44,6 +44,18 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        /*
+        if( app()->isDownForMaintenance() ) {
+            return response()->view('errors.503', [], 503);
+        }
+
+        if( app()->environment() == 'production' ) {
+            if( $exception instanceof NotFoundHttpException || $exception instanceof ModelNotFoundException || $exception instanceof \BadMethodCallException ) {
+                return response()->view('errors.404', [], 404);
+            }
+        }
+        */
+
         return parent::render($request, $exception);
     }
 

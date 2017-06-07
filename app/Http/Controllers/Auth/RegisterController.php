@@ -2,9 +2,15 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\User;
+
+//  Utils + Requests
 use Validator;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\RegisterRequest;
+
+//  Auth + User
+use Auth;
+use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
 class RegisterController extends Controller
@@ -72,6 +78,31 @@ class RegisterController extends Controller
             'nickname'  =>  $data['nickname'],
             'email'     =>  $data['email'],
             'password'  =>  bcrypt($data['password']),
+        ]);
+    }
+
+    /**
+     * Inscription en mode libre
+     *
+     * @param RegisterRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function signUpTelling(RegisterRequest $request)
+    {
+        $user = User::create([
+            'name'          =>  $request->input('name_register'),
+            'firstname'     =>  $request->input('firstname_register'),
+            'nickname'      =>  $request->input('nickname_register'),
+            'email'         =>  $request->input('email_register'),
+            'password'      =>  bcrypt($request->input('password_register')),
+        ]);
+
+        Auth::loginUsingId($user->id);
+        return response()->json([
+            'success'   =>  true,
+            'alert'     =>  true,
+            'message'   =>  'Votre compte vient d\'être créée ! Vous allez être connecté et redirigé pour poursuivre.',
+            'redirect'  =>  route('telling.email') . $request->has('email_id_register') ? '?email=' . $request->input('email_id_register') : '',
         ]);
     }
 }

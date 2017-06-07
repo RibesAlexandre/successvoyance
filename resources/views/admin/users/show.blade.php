@@ -20,8 +20,16 @@
                         <h4 class="title">{{ $user->full_name }}</h4>
                     </div>
                     <div class="content">
-                        {!! BootForm::open()->action( route('admin.users.update', ['id' => $user->id]) )->id('user-form')->patch() !!}
+                        {!! BootForm::open()->action( route('admin.users.update', ['id' => $user->id]) )->id('user-form')->put() !!}
                         {!! BootForm::bind($user) !!}
+                        <div class="row">
+                            <div class="col-md-6">
+                                {!! BootForm::text('Pseudo', 'nickname') !!}
+                            </div>
+                            <div class="col-md-6">
+                                {!! BootForm::email('Adresse email', 'email') !!}
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-6">
                                 {!! BootForm::text('Nom', 'name') !!}
@@ -32,18 +40,15 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                {!! BootForm::email('Adresse email', 'email') !!}
-                            </div>
-                            <div class="col-md-6">
-                                {!! BootForm::date('Date de naissance', 'dob', $user->dob_date) !!}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
                                 {!! BootForm::password('Mot de passe', 'password')->helpBlock('Laissez vide pour ne pas changer le mot de passe de l\'utilisateur.') !!}
                             </div>
                             <div class="col-md-6">
                                 {!! BootForm::password('Confirmation du mot de passe', 'password_confirm') !!}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {!! BootForm::select('Voyant associé', 'soothsayer_id', $soothsayers) !!}
                             </div>
                         </div>
                         {!! BootForm::submit('Modifier le profil de l\'utilisateur', 'btn btn-success btn-block btn-fill')->id('btn-submit') !!}

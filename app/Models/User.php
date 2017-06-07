@@ -2,14 +2,15 @@
 namespace App\Models;
 
 //  Models
-use App\Models\Forum\Post;
-use App\Models\Forum\Topic;
 use App\Models\Forum\TopicTrack;
 use App\Models\Forum\ForumTrack;
 
 //  Illuminate
+use App\Models\Telling\TellingEmailSended;
+use App\Models\Telling\TellingEmailUser;
 use App\Presenters\DatePresenter;
 use App\Presenters\UserPresenter;
+use DevDojo\Chatter\Models\Discussion;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -31,7 +32,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = ['name', 'firstname', 'nickname', 'email', 'password', 'avatar', 'dob', 'website', 'job', 'country', 'city', 'biography', 'can_contact', 'can_full_name', 'can_newsletter', 'can_astrological', 'can_age', 'last_connexion', 'deleted_at'];
+    protected $fillable = ['name', 'firstname', 'nickname', 'email', 'soothsayer_id', 'password', 'avatar', 'dob', 'website', 'job', 'country', 'city', 'biography', 'can_contact', 'can_full_name', 'can_newsletter', 'can_astrological', 'can_age', 'last_connexion', 'deleted_at'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -42,7 +43,7 @@ class User extends Authenticatable
 
     protected $dates = ['last_connexion', 'deleted_at'];
 
-    protected $with = ['roles'];
+    protected $with = ['roles', 'soothsayer'];
 
     /**
      * Sujets crées par l'utilisateur
@@ -51,7 +52,7 @@ class User extends Authenticatable
      */
     public function topics()
     {
-        return $this->hasMany(Topic::class, 'user_id');
+        return $this->hasMany(Discussion::class, 'user_id');
     }
 
     /**
@@ -61,7 +62,7 @@ class User extends Authenticatable
      */
     public function posts()
     {
-        return $this->hasMany(Post::class, 'user_id');
+        return $this->hasMany(\DevDojo\Chatter\Models\Post::class, 'user_id');
     }
 
     /**
@@ -131,7 +132,7 @@ class User extends Authenticatable
      */
     public function soothsayer()
     {
-        return $this->hasOne(Soothsayer::class, 'user_id');
+        return $this->belongsTo(Soothsayer::class, 'soothsayer_id');
     }
 
     /**
@@ -155,6 +156,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Emails de Voyance envoyés
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function emailsSended()
+    {
+        return $this->hasMany(TellingEmailSended::class, 'user_id');
+    }
+
+    /**
      * Retourne le dernier achat email
      *
      * @return mixed
@@ -165,6 +176,42 @@ class User extends Authenticatable
     }
 
     /**
+     * Nombre de commentaires de l'utilisateur
+     *
+     * @return mixed
+     */
+    public function countComments()
+    {
+        return $this->hasOne(Comment::class)
+            ->selectRaw('user_id, count(*) as aggregate')
+            ->groupBy('user_id');
+    }
+
+    /**
+     * Nombre de message de l'utilisateur
+     *
+     * @return mixed
+     */
+    public function countMessages()
+    {
+        return $this->hasOne(\DevDojo\Chatter\Models\Post::class)
+            ->selectRaw('user_id, count(*) as aggregate')
+            ->groupBy('user_id');
+    }
+
+    /**
+     * Nombre de sujets de l'utilisateur
+     *
+     * @return mixed
+     */
+    public function countTopics()
+    {
+        return $this->hasOne(Discussion::class)
+            ->selectRaw('user_id, count(*) as aggregate')
+            ->groupBy('user_id');
+    }
+
+    /**
      * Formatage de la date de naissance
      *
      * @param $value
@@ -172,5 +219,10 @@ class User extends Authenticatable
     public function setDobAttribute($value)
     {
         $this->attributes['dob'] = is_null($value) || empty($value) ? null : Date::parse($value)->format('Y-m-d');
+    }
+
+    public function setSoothsayerIdAttribute($value)
+    {
+        $this->attributes['soothsayer_id'] = ($value == 0 || $value == '0') ? null : $value;
     }
 }

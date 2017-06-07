@@ -1,9 +1,10 @@
 @extends('layouts.app')
 
 @section('title', 'Me connecter')
+@section('pageTitle', 'Me connecter')
 
 @push('breadcrumbs')
-<li><a href="{{ url('login') }}">Connexion</a></li>
+<li class="active"><a href="{{ url('login') }}">Connexion</a></li>
 @endpush
 
 @section('content')

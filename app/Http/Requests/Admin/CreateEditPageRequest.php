@@ -37,7 +37,7 @@ class CreateEditPageRequest extends FormRequest
             ]);
         } else if( $this->method() === 'PATCH' ) {
             $rules = array_merge($rules, [
-                'name'	=>	'required|max:250|min:5|unique:pages,name,' . $this->route()->getParameter('page'),
+                'name'	=>	'required|max:250|min:5|unique:pages,name,' . $this->route()->parameter('page'),
             ]);
         }
 

@@ -37,6 +37,9 @@ elixir(function(mix) {
 		.less([
 			'app.less',
 		], 'public/css/app.css')
+		.less([
+			'payment.less'
+		], 'public/css/payment.css')
 		.sass([
 			'components/*.scss',
 			'components/**.scss',
@@ -72,9 +75,13 @@ elixir(function(mix) {
 		.sass([
 			'admin/light-bootstrap-dashboard.scss'
 		], 'public/css/admin.css')
+		.scripts([
+			'plugins/jquery.slimscroll.min.js',
+		], 'public/js/plugins/jquery.slimscroll.min.js')
         .version([
             'css/app.css',
             'css/components.css',
+            'css/payment.css',
             'js/components.js',
             'js/plugins.js',
             'js/app.js',

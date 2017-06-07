@@ -1,16 +1,26 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
 //  Requests
-use App\Http\Requests\User\EditAccountRequest;
-use App\Http\Requests\User\EditPasswordRequest;
-use App\Http\Requests\User\EditPictureRequest;
-
-use Auth;
+use App\Http\Requests\TellingEmailRequest;
+use App\Models\Telling\TellingEmailResponse;
 use Illuminate\Http\Request;
-use Image;
+use App\Http\Requests\User\EditAccountRequest;
+use App\Http\Requests\User\EditPictureRequest;
+use App\Http\Requests\User\EditPasswordRequest;
+use App\Http\Requests\TellingUserResponseRequest;
+
+//  Models
 use App\Models\User;
+use App\Models\Telling\TellingEmailSended;
+use App\Models\Telling\TellingEmailUser;
+
+//  Services
+use Auth;
+use Mail;
+use Image;
+
+use App\Mail\ContactTelling;
 use App\Http\Controllers\Controller;
 
 /**
@@ -27,7 +37,20 @@ class AccountController extends Controller
      */
     public function index()
     {
-        return view('auth.account.index')->with('user', Auth::user());
+        $user = User::with('countTopics', 'countMessages', 'countComments')
+            ->with(['comments' => function($query) {
+                $query->latest()->take(5)->get();
+            }])
+            ->with(['topics' => function($query) {
+                $query->latest()->take(5)->get();
+            }])
+            ->with(['posts' => function($query) {
+                $query->latest()->take(5)->get();
+            }])
+            ->where('id', Auth::user()->id)
+            ->first();
+
+        return view('auth.account.index')->with('user', $user);
     }
 
     /**
@@ -181,6 +204,74 @@ class AccountController extends Controller
             'success'   =>  true,
             'alert'     =>  true,
             'message'   =>  'Vos préférences ont correctement été mises à jour.'
+        ]);
+    }
+
+    /**
+     * Liste des emails de l'utilisateur
+     *
+     * @return $this
+     */
+    public function emails()
+    {
+        $countEmails = TellingEmailUser::where('user_id', Auth::user()->id)->select('total')->get();
+        $emails = TellingEmailSended::with('user', 'responses')->where('user_id', Auth::user()->id)->latest()->groupBy('identifier')->paginate(10);
+
+        $total = 0;
+        foreach( $countEmails as $count ) {
+            $total += $count->total;
+        }
+
+        return view('auth.account.emails', compact('total', 'emails'))->with('user', Auth::user());
+    }
+
+    /**
+     * Vue d'un email
+     *
+     * @param $identifier
+     * @return $this
+     */
+    public function email($identifier)
+    {
+        $emails = TellingEmailSended::where('identifier', $identifier)->with('response')->oldest()->get();
+        return view('auth.account.email', compact('emails'))->with('user', Auth::user());
+    }
+
+    public function emailPost(TellingEmailRequest $request)
+    {
+        $countEmails = TellingEmailUser::where('user_id', Auth::user()->id)->select('total')->get();
+        $total = 0;
+        foreach( $countEmails as $count ) {
+            $total += $count->total;
+        }
+
+        if( $total < 1 ) {
+            return response()->json([
+                'success'   =>  false,
+                'alert'     =>  true,
+                'message'   =>  'Vous avez épuisé votre total d\'emails pour nos voyants. Vous devez commander un nouveau pack pour continuer la conversation.',
+                'redirect'  =>  route('telling.email'),
+                'timer'     =>  5000,
+            ]);
+        }
+
+        $email = $request->user()->emailsSended()->create([
+            'identifier'    =>  $request->input('identifier'),
+            'topic'         =>  $request->input('topic'),
+            'content'       =>  $request->input('content'),
+        ]);
+
+        TellingEmailUser::where('user_id', $request->user()->id)->decrement('total');
+        Mail::to(config('successvoyance.contact'))->send(new ContactTelling($request, $request->input('identifier')));
+        return response()->json([
+            'success'   =>  true,
+            'message'   =>  'Votre email a correctement été envoyé à nos voyant(e)s ! Vous recevrez une réponse dans les plus brefs délais.',
+            'alert'     =>  true,
+            'content'   =>  view('auth.account.partials.telling_email_body', compact('email'))->with('user', $request->user())->render(),
+            'method'    =>  'append',
+            'element'   =>  '#emails_conversations',
+            'clean'     =>  true,
+            'to_clean'  =>  ['content'],
         ]);
     }
 

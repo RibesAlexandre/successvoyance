@@ -28,14 +28,17 @@ class CreateEditLinkRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'link'  =>  'required|url',
+            'link'          =>  'required',
+            'container'     =>  'required',
+            'page'          =>  'nullable',
+            'parent_id'     =>  'nullable',
         ];
 
-        if( $this->method() === 'POST' ) {
+        if( $this->method() == 'POST' ) {
             $rules = array_add($rules, 'name', 'required|min:3|max:30|unique:links');
         } else {
             $rules = array_merge($rules, [
-                'name'	=>	'required|max:30|min:3|unique:links,name,' . $this->route()->getParameter('id'),
+                'name'	=>	'required|max:30|min:3|unique:links,name,' . $this->route()->parameter('id')
             ]);
         }
 

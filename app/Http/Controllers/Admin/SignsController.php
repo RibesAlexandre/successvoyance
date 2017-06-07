@@ -3,15 +3,18 @@ namespace App\Http\Controllers\Admin;
 
 //  Models
 use App\Http\Requests\Admin\CreateEditHoroscopeRequest;
+use App\Mail\HoroscopeEmail;
 use App\Models\Horoscope;
 use App\Models\AstrologicalSign;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 //  Utils
 use Sync;
 use Date;
+use Mail;
 
 /**
  * Class SignsController
@@ -161,6 +164,20 @@ class SignsController extends Controller
         $inputs['slug'] = str_slug($request->input('name')) . '-' . Date::parse($request->input('begin_at'))->format('d-m-Y') . '-' .  Date::parse($request->input('ending_at'))->format('d-m-Y');
         $horoscope = Horoscope::create($inputs);
         Sync::syncPictures($horoscope, $request);
+
+        $sign = AstrologicalSign::findOrFail($horoscope->sign_id);
+        $users = User::where('can_astrological', true)->where(function($query) use($sign) {
+            $query->whereRaw("DATE_FORMAT(dob, '%m-%d') >= '$sign->sign_begin_month'")->whereRaw("DATE_FORMAT(dob, '%m-%d') <= '$sign->sign_ending_month'");
+        })->get();
+
+        dump($sign->sign_begin_month);
+        dump($sign->sign_ending_month);
+        dump($users);
+
+        //  On envoit un email aux abonnés de l'horoscope
+        foreach( $users as $user ) {
+            Mail::to($user->email)->queue(new HoroscopeEmail($user, $horoscope, $sign));
+        }
 
         return response()->json([
             'success'   =>  true,

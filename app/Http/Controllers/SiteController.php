@@ -12,6 +12,7 @@ use App\Models\AstrologicalSign;
 use App\Models\Comment;
 use App\Models\Content\Page;
 use App\Models\Newsletter;
+use App\Models\Recruitment;
 use DevDojo\Chatter\Models\Discussion;
 use DevDojo\Chatter\Models\Post;
 use Utils;
@@ -19,8 +20,10 @@ use Audiotel;
 use App\Models\Soothsayer;
 use Illuminate\Http\Request;
 
+use Auth;
 use Mail;
 use Date;
+use Cache;
 
 /**
  * Class SiteController
@@ -39,19 +42,25 @@ class SiteController extends Controller
     public function index()
     {
         $soothsayers = [];
-        $soothsayersData = Soothsayer::with('commentsCount')->get();
+        $soothsayersData = Cache::remember('soothsayers_index', 10, function() {
+            return Soothsayer::with('commentsCount', 'favoritesCount')->get();
+        });
+
         foreach( $soothsayersData as $s ) {
             $soothsayers[$s->slug] = [
-                'nickname'  =>  $s->nickname,
-                'slug'      =>  $s->slug,
-                'rating'    =>  $s->rating,
-                'phone'     =>  $s->phone,
-                'code'      =>  $s->code,
-                'content'   =>  $s->content,
-                'picture'   =>  $s->picture,
-                'comments'  =>  $s->commentsCount,
-                'favorites' =>  $s->favoritesCount,
-                'total'     =>  $s->total_consultations,
+                'id'            =>  $s->id,
+                'nickname'      =>  $s->nickname,
+                'slug'          =>  $s->slug,
+                'rating'        =>  $s->rating,
+                'phone'         =>  $s->phone,
+                'code'          =>  $s->code,
+                'content'       =>  $s->content,
+                'picture'       =>  $s->picture,
+                'comments'      =>  $s->commentsCount,
+                'favorites'     =>  $s->favoritesCount,
+                'total'         =>  $s->total_consultations,
+                'created_at'    =>  $s->created_at,
+                'updated_at'    =>  $s->updated_at,
             ];
         }
 
@@ -110,14 +119,17 @@ class SiteController extends Controller
                             ]);
                         }
 
-                        $consultationsJson = json_decode(Audiotel::getConsultationsByConsultant($c->pseudo));
-                        $count = count($consultationsJson->list_time_slot);
+                        //  Check pour récupérer le total de consultations
+                        if( $soothsayers[str_slug($c->pseudo)]['updated_at'] > Date::now()->subDays(1) ) {
+                            $consultationsJson = json_decode(Audiotel::getConsultationsByConsultant($c->pseudo));
+                            $count = count($consultationsJson->list_time_slot);
 
-                        if( $count != $soothsayers[str_slug($c->pseudo)]['total'] ) {
-                            $soothsayer = Soothsayer::where('slug', str_slug($c->pseudo))->firstOrFail();
-                            $soothsayer->update([
-                                'total_consultations'   =>  $count,
-                            ]);
+                            if( $count != $soothsayers[str_slug($c->pseudo)]['total'] ) {
+                                $soothsayer = Soothsayer::where('slug', str_slug($c->pseudo))->firstOrFail();
+                                $soothsayer->update([
+                                    'total_consultations'   =>  $count,
+                                ]);
+                            }
                         }
                     }
 
@@ -136,9 +148,9 @@ class SiteController extends Controller
             //  Tri de la liste des consultants
             $consultantsCollection = collect($soothsayers);
             $consultants = $consultantsCollection->sortByDesc(function($consultant, $key) {
-                if( isset($consultant['status_08']) ) {
+                if( isset($consultant['status_08']) && $consultant['status_08'] ) {
                     return ($consultant['status_08'] ? 1000000 : 0) + $consultant['rating'];
-                } else if( isset($consultant['status_cb']) ) {
+                } else if( isset($consultant['status_cb']) && $consultant['status_cb'] ) {
                     return ($consultant['status_cb'] ? 1000000 : 0) + $consultant['rating'];
                 }
 
@@ -148,12 +160,32 @@ class SiteController extends Controller
             $this->consultants = $consultants->all();
         }
 
-        $comments = Comment::orderBy('created_at', 'DESC')->with('user')->with('soothsayer')->with('horoscope')->take(4)->get();
-        //$messages = Post::orderBy('created_at')->with('user')->with('discussion')->where('locked', false)->take(5)->get();
-        $topics = Discussion::orderBy('created_at', 'DESC')->with('user')->with('category')->take(4)->get();
-        $topicsHot = Discussion::orderBy('answered', 'DESC')->with('user')->with('category')->take(4)->get();
+        //  Derniers commentaires
+        $comments = Cache::remember('comments_index', 10, function() {
+            return Comment::orderBy('created_at', 'DESC')->with('user')->with('soothsayer')->with('horoscope')->take(4)->get();
+        });
 
-        return view('pages.home', compact('comments', 'topics', 'topicsHot'))->with('consultants', $this->consultants);
+        //  Derniers Sujets
+        $topics = Cache::remember('topics_index', 10, function() {
+            return Discussion::orderBy('created_at', 'DESC')->with('user')->with('category')->take(4)->get();
+        });
+
+        //  Discussions "chaudes"
+        $topicsHot = Cache::remember('topics_hot_index', 30, function() {
+            return Discussion::orderBy('answered', 'DESC')->with('user')->with('category')->take(4)->get();
+        });
+
+        /**
+         * Voyants favoris
+         */
+        $favorites = [];
+        if( Auth::check() ) {
+            foreach( Auth::user()->favoritesSoothsayers as $fav ) {
+                $favorites[] = $this->consultants[$fav->slug];
+            }
+        }
+
+        return view('pages.home', compact('comments', 'topics', 'topicsHot', 'favorites'))->with('consultants', $this->consultants);
     }
 
     /**
@@ -198,7 +230,8 @@ class SiteController extends Controller
 
     public function recruitment()
     {
-        return view('pages.recruitment');
+        $offers = Recruitment::latest()->get();
+        return view('pages.recruitment', compact('offers'));
     }
 
     public function postRecruitment(RecruitmentRequest $request)
@@ -231,6 +264,10 @@ class SiteController extends Controller
             'email'         =>  $request->input('newsletter_email'),
             'user_id'       =>   is_null($request->user()) ? null : $request->user()->id,
         ]);
+
+        if( !is_null($request->user()) && !$request->user()->can_newsletter ) {
+            $request->user()->update(['can_newsletter' => true]);
+        }
 
         return response()->json([
             'success'   =>  true,

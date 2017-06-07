@@ -1,3 +1,3 @@
 @foreach( $comments as $comment )
-    @include('components.comment')
+    @include('components.comments.comment')
 @endforeach

@@ -78,7 +78,7 @@
                     </div>
                     <div class="margin-bottom-30">
                         {!! Form::hidden('soothsayer_id', $soothsayer->id) !!}
-                        <textarea name="content" id="text" class="form-control" rows="6" placeholder="Votre commentaire..." maxlength="1000"></textarea>
+                        <textarea name="content" id="content" class="form-control" rows="6" placeholder="Votre commentaire..." maxlength="1000"></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary" id="submit-comment"><i class="fa fa-check"></i> Laisser un commentaire</button>
 
@@ -92,7 +92,7 @@
                 <div class="alert alert-primary text-center">Il n'y a actuellement aucun commentaire pour {{ $soothsayer->nickname }}, n'hésitez pas à lui en laisser un !</div>
             @endforelse
 
-            @if( count($comments) < 2 && $soothsayer->commentsCount > 1 )
+            @if( count($comments) < $soothsayer->commentsCount && $soothsayer->commentsCount > 1 )
                 <div class="text-center" id="more-comments">
                     <a href="{{ route('soothsayers.comments', ['id' => $soothsayer->id]) }}?skip={{ count($comments) }}" data-action="load-more" class="btn btn-default"><i class="fa fa-plus"></i> Charger plus de commentaires</a>
                 </div>
@@ -145,5 +145,14 @@
         app.submitForm('#update-comment', '#btn-update-comment', function() {
         	$('#modal-comment').modal('hide');
         });
+        var div = '';
+        $('body').on('click', '[data-action="display-response"]', function(e) {
+        	e.preventDefault();
+        	div = $(this).attr('href');
+        	$(div).slideToggle();
+        });
+		app.submitForm('#form-response', '#submit-response', function() {
+	        $(div).slideToggle();
+		});
     </script>
 @endsection

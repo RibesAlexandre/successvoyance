@@ -11,7 +11,7 @@
         box-shadow: 0 0px 4px @primary-color;
         filter:progid:DXImageTransform.Microsoft.Shadow(color=@primary-color, Direction=116, Strength=5);
         display: block;
-        min-height: 180px;
+        //min-height: 180px;
         padding: 10px;
         margin-bottom: 20px;
         border-radius: 6px;
@@ -52,15 +52,31 @@
                     font-style: italic;
                 }
             }
+
+            .rating {
+                display: inline !important;
+                padding-left: 20px;
+            }
         }
 
         .contact {
             text-align: center;
+            margin-top: 20px;
 
             .label {
                 font-size: 20px;
                 padding: 10px;
             }
         }
+    }
+}
+
+.border-box {
+    box-shadow: none !important;
+    border-radius: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+
+    &.no-bottom {
+        border-bottom: none;
     }
 }

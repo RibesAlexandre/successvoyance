@@ -1,10 +1,16 @@
 <?php
-
 namespace App\Http\Controllers;
 
+//  Utils
+use App\Mail\AlertSoothsayerComment;
+use Mail;
 use Auth;
+
+//  Models
 use App\Models\Comment;
 use App\Models\Soothsayer;
+
+//  Requests
 use Illuminate\Http\Request;
 use App\Http\Requests\CreateEditCommentRequest;
 
@@ -46,19 +52,29 @@ class CommentsController extends Controller
     public function store(CreateEditCommentRequest $request)
     {
         $comment = $request->user()->comments()->create($request->all());
-        if( $request->has('stars') && $request->has('soothsayer_id') ) {
+
+        $soothsayer = null;
+        if( $request->has('soothsayer_id') ) {
             $soothsayer = Soothsayer::findOrFail($request->input('soothsayer_id'));
+        }
+
+        if( $soothsayer && $request->has('stars')) {
             $soothsayer->update([
                 'stars'     =>  $request->input('stars'),
                 'ratings'   =>  $soothsayer->ratings + 1,
             ]);
+
+            if( $request->user()->soothsayer_id != $soothsayer->id && $soothsayer->user ) {
+                Mail::to($soothsayer->user->email)->send(new AlertSoothsayerComment($soothsayer, $comment, $request->user()));
+            }
         }
+
         return response()->json([
             'success'   =>  true,
             'clean'     =>  true,
-            'content'   =>  view('components.comments.comment', compact('comment'))->render(),
-            'method'    =>  'after',
-            'element'   =>  '#list-comments',
+            'content'   =>  view('components.comments.comment', compact('comment', 'soothsayer'))->render(),
+            'method'    =>  $request->has('parent_id') ? 'append' : 'after',
+            'element'   =>  $request->has('parent_id') ? '#responses_' . $request->input('parent_id') : '#list-comments',
             'to_clean'  =>  [
                 'stars',
                 'content'

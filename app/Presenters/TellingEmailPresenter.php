@@ -15,6 +15,7 @@ trait TellingEmailPresenter
      */
     public function getAmountPriceAttribute()
     {
-        return number_format(($this->amount / 100), 0, ',', ' ');
+        $number = number_format(($this->amount / 100), 2, ',', ' ');
+        return strpos($number,',') !== false ? rtrim(rtrim($number,'0'), ',') : $number;
     }
 }

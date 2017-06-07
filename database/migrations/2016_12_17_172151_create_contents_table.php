@@ -24,7 +24,7 @@ class CreateContentsTable extends Migration
             $table->string('link');
             $table->integer('position')->nullable()->default(null);
             $table->string('container')->default('header');
-            $table->integer('parent_id')->unsigned()->index();
+            $table->integer('parent_id')->unsigned()->index()->nullable();
         });
 
         Schema::table('links', function(Blueprint $table) {

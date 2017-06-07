@@ -14,7 +14,7 @@ class AddCommentsStarsFields extends Migration
     public function up()
     {
         Schema::table('comments', function(Blueprint $table) {
-            $table->integer('stars')->unsigned()->default(0)->after('parent_id');
+            $table->integer('stars')->unsigned()->default(0)->after('parent_id')->nullable();
         });
     }
 

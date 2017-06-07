@@ -1,5 +1,5 @@
 window.width = $(window).width();
-var plugin_path = 'js/plugins';
+var plugin_path = document.location.origin + '/js/plugins';
 
 var app = {
 	
@@ -66,39 +66,41 @@ var app = {
 					
 					console.log(timer);
 					
-					setTimeout(function() {
-						if( typeof response.alert != 'undefined' ) {
-							var alertType = '';
-							if( typeof response.type != 'undefined' ) {
-								alertType = response.type;
+					if( typeof response.content != 'undefined' ) {
+						$(response.element)[response.method](response.content);
+					}
+					
+					if( typeof response.alert != 'undefined' ) {
+						var alertType = '';
+						if (typeof response.type != 'undefined') {
+							alertType = response.type;
+						} else {
+							if (response.success) {
+								alertType = 'success';
 							} else {
-								if( response.success ) {
-									alertType = 'success';
-								} else {
-									alertType = 'error';
-								}
+								alertType = 'error';
 							}
-							toastr[alertType](response.message);
-						} else if( typeof response.content != 'undefined' ) {
-							$(response.element)[response.method](response.content);
 						}
-						
-						if( typeof response.clean != 'undefined' && typeof response.to_clean != 'undefined' && response.clean ) {
-							$.each(response.to_clean, function(key, value) {
-								if( $('#' + value).length > 0 ) {
-									$('#' + value).val('');
-								}
-							});
-						}
-						
-						if( typeof response.inputs != 'undefined' ) {
-							$.each(response.inputs, function(key, value) {
-								if( $('#' + key).length > 0 ) {
-									$('#' + key).val(value);
-								}
-							});
-						}
-						
+						toastr[alertType](response.message);
+					}
+					
+					if( typeof response.clean != 'undefined' && typeof response.to_clean != 'undefined' && response.clean ) {
+						$.each(response.to_clean, function(key, value) {
+							if( $('#' + value).length > 0 ) {
+								$('#' + value).val('');
+							}
+						});
+					}
+					
+					if( typeof response.inputs != 'undefined' ) {
+						$.each(response.inputs, function(key, value) {
+							if( $('#' + key).length > 0 ) {
+								$('#' + key).val(value);
+							}
+						});
+					}
+					
+					setTimeout(function() {
 						if( typeof response.redirect != 'undefined' ) {
 							//var timer = typeof response.timer == 'undefined' ? 5000 : response.timer;
 							//setTimeout(function() {

@@ -12,22 +12,28 @@
 
     <section>
         <div class="container">
-
             <div class="row">
-
                 <div class="col-lg-5 col-md-5 col-sm-5">
-
                     <img class="img-responsive" src="{{ $sign->logo }}" alt="{{ $sign->name }}">
-
                 </div>
-
                 <div class="col-lg-7 col-md-7 col-sm-7">
                     <h2 class="size-25">{{ $sign->name }} <small>Du {{ $sign->sign_begin_date }} au {{ $sign->sign_ending_date }}</small></h2>
                     {!! $sign->content !!}
+
+                    <hr>
+
+                    @if( !is_null($horoscope) )
+                    <h2 class="size-25">Dernier horoscope <small>Du {{ $horoscope->begin }} au {{ $horoscope->ending }}</small></h2>
+                    {!! $horoscope->content !!}
+
+                    <hr>
+                    @endif
+
+                    <p class="text-center">
+                        <a href="{{ route('signs.horoscopes', ['sign' => $sign->slug]) }}" alt="Voir tous les horoscopes" class="btn btn-success"><i class="fa fa-eye"></i> Voir tous les horoscopes</a>
+                    </p>
                 </div>
-
             </div>
-
         </div>
     </section>
     <section class="nopadding">

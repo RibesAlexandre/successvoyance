@@ -33,4 +33,14 @@ class Link extends Model
     {
         return $this->hasMany(Link::class, 'parent_id');
     }
+
+    /**
+     * Lien du parent
+     *
+     * @param $value
+     */
+    public function setParentIdAttribute($value)
+    {
+        $this->attributes['parent_id'] = ($value!= '0' && $value!= 0) ? $value : null;
+    }
 }

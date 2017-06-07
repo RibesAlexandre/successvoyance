@@ -1,5 +1,7 @@
 /** Top Nav
  **************************************************************** **/
+@import 'variables';
+
 #header {
 	position: relative;
 	left:0; top:0; right:0;
@@ -1469,7 +1471,8 @@
 	/* Sticky 60px */
 	#header.fixed {
 		position:fixed;
-		border-bottom:rgba(0,0,0,0.08) 1px solid;
+		//border-bottom:rgba(0,0,0,0.08) 1px solid;
+		border-bottom: 1px solid @primary-color;
 	}
 	#header.fixed #topNav a.logo {
 		height:60px;

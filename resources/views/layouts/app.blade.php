@@ -40,9 +40,9 @@
                     <ul class="dropdown-menu">
                         <li><a tabindex="-1" href="{{ route('account') }}"><i class="fa fa-user"></i>Accueil</a></li>
                         <li class="divider"></li>
-                        <li><a tabindex="-1" href="#"><i class="fa fa-bookmark"></i> MY WISHLIST</a></li>
-                        <li><a tabindex="-1" href="#"><i class="fa fa-edit"></i> MY REVIEWS</a></li>
-                        <li><a tabindex="-1" href="#"><i class="fa fa-cog"></i> MY SETTINGS</a></li>
+                        <li><a tabindex="-1" href="{{ route('account.edit') }}"><i class="fa fa-cog"></i>  Paramètres</a></li>
+                        <li class="divider"></li>
+                        <li><a tabindex="-1" href="{{ route('account.emails') }}"><i class="fa fa-paper-plane"></i> Emails Voyance</a></li>
                         <li class="divider"></li>
                         <li>
                             <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fa fa-sign-out"></i> Déconnexion</a>
@@ -92,13 +92,30 @@
                     <img src="{{ $cfg['logo'] }}" alt="{{ $cfg['name'] }}" class="img-responsive">
                 </a>
 
-                <div class="navbar-collapse pull-right nav-main-collapse collapse submenu-dark">
+                <div class="navbar-collapse pull-right nav-main-collapse collapse">
                     <nav class="nav-main">
                         <ul id="topMain" class="nav nav-pills nav-main">
-                            <li><a href="#">Accueil</a></li>
-                            <li><a href="#">Horoscope</a></li>
-                            <li><a href="#">Forum</a></li>
-                            <li><a href="#">Voyance</a></li>
+                            <li><a href="{{ route('home') }}">Accueil</a></li>
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" href="#">Signes Astrologiques</a>
+                                <ul class="dropdown-menu">
+                                    @foreach( $astrologicalSignsList as $sign )
+                                        <li><a href="{{ route('signs.show', ['sign' => $sign->slug]) }}"><img src="{{ $sign->logo }}" class="img-responsive width-20" alt="{{ $sign->name }}"> {{ $sign->name }}</a></li>
+                                    @endforeach
+                                </ul>
+                            </li>
+                            @foreach( $headerLinks as $link )
+                            <li>
+                                <a href="{{ count($link->childrens) > 0 ? '#' : url($link->link) }}"{{ count($link->childrens) > 0 ? ' class="dropdown-toggle"' : '' }} alt="{{ $link->name }}">{{ $link->name }}</a>
+                                @if( count($link->childrens) > 0 )
+                                <ul class="dropdown-menu">
+                                    @foreach( $link->childrens as $child )
+                                    <li><a href="{{ url($child->link) }}" alt="{{ $child->name }}">{{ $child->name }}</a></li>
+                                    @endforeach
+                                </ul>
+                                @endif
+                            </li>
+                            @endforeach
                         </ul>
                     </nav>
                 </div>
@@ -138,74 +155,44 @@
         <div class="row">
 
             <div class="col-md-3">
-                <!-- Footer Logo -->
-                Success Voyance
+                <img class="footer-logo width-200 center-block img-rounded img-thumbnail" src="{{ $cfg['logo'] }}" alt="{{ $cfg['name'] }}" />
 
-                <!-- Small Description -->
-                <p>Integer posuere erat a ante venenatis dapibus posuere velit aliquet.</p>
+                <p>{{ $cfg['description'] }}</p>
+            </div>
 
-                <!-- Contact Address -->
-                <address>
-                    <ul class="list-unstyled">
-                        <li class="footer-sprite address">
-                            Success Voyance<br>
-                            6 rue des Tartampions<br>
-                            66000 Bompas<br>
-                        </li>
-                        <li class="footer-sprite phone">
-                            Phone: 07.09.09.09.09
-                        </li>
-                        <li class="footer-sprite email">
-                            <a href="#">contact@successvoyance.fr</a>
-                        </li>
-                    </ul>
-                </address>
-                <!-- /Contact Address -->
-
+            <div class="col-md-2">
+                <h4 class="letter-spacing-1">Navigation</h4>
+                <ul class="footer-links list-unstyled">
+                    @foreach( $footerLinks as $link )
+                        <li><a href="{{ url($link->link) }}">{{ $link->name }}</a></li>
+                    @endforeach
+                </ul>
             </div>
 
             <div class="col-md-3">
 
                 <!-- Latest Blog Post -->
-                <h4 class="letter-spacing-1">Dernières conversations</h4>
-                <ul class="footer-posts list-unstyled">
-                    <li>
-                        <a href="#">Donec sed odio dui. Nulla vitae elit libero, a pharetra augue</a>
-                        <small>29 June 2015</small>
-                    </li>
-                    <li>
-                        <a href="#">Nullam id dolor id nibh ultricies</a>
-                        <small>29 June 2015</small>
-                    </li>
-                    <li>
-                        <a href="#">Duis mollis, est non commodo luctus</a>
-                        <small>29 June 2015</small>
-                    </li>
-                </ul>
-                <!-- /Latest Blog Post -->
-
-            </div>
-
-            <div class="col-md-2">
-
-                <!-- Links -->
-                <h4 class="letter-spacing-1">EXPLORE SMARTY</h4>
-                <ul class="footer-links list-unstyled">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Our Services</a></li>
-                    <li><a href="#">Our Clients</a></li>
-                    <li><a href="#">Our Pricing</a></li>
-                    <li><a href="#">Smarty Tour</a></li>
-                    <li><a href="#">Contact Us</a></li>
-                </ul>
-                <!-- /Links -->
+                <h4 class="letter-spacing-1">Signes Astrologiques</h4>
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <ul class="footer-links list-unstyled">
+                        @foreach( $astrologicalSignsList->take(6)->all() as $sign )
+                            <li><a href="{{ route('signs.show', ['sign' => $sign->slug]) }}"><img src="{{ $sign->logo }}" class="img-responsive width-20" alt="{{ $sign->name }}"> {{ $sign->name }}</a></li>
+                        @endforeach
+                        </ul>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <ul class="footer-links list-unstyled">
+                            @foreach( $astrologicalSignsList->splice(6)->all() as $sign )
+                                <li><a href="{{ route('signs.show', ['sign' => $sign->slug]) }}"><img src="{{ $sign->logo }}" class="img-responsive width-20" alt="{{ $sign->name }}"> {{ $sign->name }}</a></li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
 
             </div>
 
             <div class="col-md-4">
-
-                <!-- Newsletter Form -->
                 <h4 class="letter-spacing-1">Restez connecté !</h4>
                 <p>Inscrivez vous à notre newsletter pour profiter de nos promotions et des nouveautés du site.</p>
 
@@ -213,15 +200,12 @@
                     {{ csrf_field() }}
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                        <input type="email" id="newsletter_email" name="newsletter_email" class="form-control required" placeholder="Votre adresse emil">
+                        <input type="email" id="newsletter_email" name="newsletter_email" class="form-control required" placeholder="Votre adresse email">
                         <span class="input-group-btn">
                                 <button class="btn btn-success" type="submit" id="newsletter-submit">S'inscrire !</button>
                             </span>
                     </div>
                 </form>
-                <!-- /Newsletter Form -->
-
-                <!-- Social Icons -->
                 <div class="margin-top-20">
                     <a href="#" class="social-icon social-icon-border social-facebook pull-left" data-toggle="tooltip" data-placement="top" title="Facebook">
 
@@ -238,27 +222,17 @@
                         <i class="fa fa-google-plus"></i>
                         <i class="fa fa-google-plus"></i>
                     </a>
-
-                    <a href="#" class="social-icon social-icon-border social-rss pull-left" data-toggle="tooltip" data-placement="top" title="Rss">
-                        <i class="fa fa-rss"></i>
-                        <i class="fa fa-rss"></i>
-                    </a>
-
                 </div>
-                <!-- /Social Icons -->
-
             </div>
-
         </div>
-
     </div>
 
     <div class="copyright">
         <div class="container">
             <ul class="pull-right nomargin list-inline mobile-block">
-                <li><a href="#">Conditions d'utilisations</a></li>
+                <li><a href="{{ route('page', ['slug' => 'conditions-dutilisations']) }}">Conditions d'utilisations</a></li>
                 <li>&bull;</li>
-                <li><a href="#">CGV</a></li>
+                <li><a href="{{ route('page', ['slug' => 'conditions-generales-de-ventes']) }}">CGV</a></li>
             </ul>
             &copy; {{ date('Y') }} Success Voyance - Tous droits réservés | Réalisé avec <i class="fa fa-heart text-danger"></i> par <a href="#">Alexandre Ribes, Développeur Web sur Perpignan</a>
         </div>

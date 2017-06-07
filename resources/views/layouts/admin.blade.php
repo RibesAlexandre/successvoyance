@@ -40,49 +40,9 @@
 
             <ul class="nav">
                 <li>
-                    <a data-toggle="collapse" href="#test" class="collapsed" aria-expanded="false">
-                        <i class="fa fa-tachometer"></i>
-                        <p>Test <b class="caret"></b></p>
-                    </a>
-                    <div class="collapse" id="test" aria-expanded="false" style="height: 0px">
-                        <ul class="nav">
-                            <li>
-                                <a href="#test2">Lien 1</a>
-                            </li>
-                            <li>
-                                <a href="#test3">Lien 3</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="active">
                     <a href="{{ route('admin.index') }}">
                         <i class="fa fa-tachometer"></i>
                         <p>Tableau de bord</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.signs.index') }}">
-                        <i class="fa fa-star"></i>
-                        <p>Horoscopes</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.users.index') }}">
-                        <i class="fa fa-users"></i>
-                        <p>Liste des utilisateurs</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.roles.index') }}">
-                        <i class="fa fa-key"></i>
-                        <p>Niveaux d'autorisations</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.pages.index') }}">
-                        <i class="fa fa-file-text"></i>
-                        <p>Pages Annexes</p>
                     </a>
                 </li>
                 <li>
@@ -90,6 +50,57 @@
                         <i class="fa fa-cubes"></i>
                         <p>Configuration</p>
                     </a>
+                </li>
+                <li>
+                    <a data-toggle="collapse" href="#telling" class="collapsed" aria-expanded="false">
+                        <i class="fa fa-star"></i>
+                        <p>Voyance <b class="caret"></b></p>
+                    </a>
+                    <div class="collapse" id="telling" aria-expanded="false" style="height: 0px">
+                        <ul class="nav">
+                            <li>
+                                <a href="{{ route('admin.emails.all') }}"><p><i class="fa fa-angle-double-right"></i> Emails reçus</p></a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.emails.index') }}"><p><i class="fa fa-angle-double-right"></i>Offres Emails</p></a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.signs.index') }}"><p><i class="fa fa-angle-double-right"></i>Horoscopes</p></a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a data-toggle="collapse" href="#users" class="collapsed" aria-expanded="false">
+                        <i class="fa fa-users"></i>
+                        <p>Utilisateurs <b class="caret"></b></p>
+                    </a>
+                    <div class="collapse" id="users" aria-expanded="false" style="height: 0px">
+                        <ul class="nav">
+                            <li>
+                                <a href="{{ route('admin.users.index') }}"><p><i class="fa fa-angle-double-right"></i>Liste</p></a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.newsletter') }}"><p><i class="fa fa-angle-double-right"></i>Newsletter</p></a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.roles.index') }}"><p><i class="fa fa-angle-double-right"></i>Niveaux d'autorisations</p></a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a data-toggle="collapse" href="#blocks" class="collapsed" aria-expanded="false">
+                        <i class="fa fa-cubes"></i>
+                        <p>Éléments <b class="caret"></b></p>
+                    </a>
+                    <div class="collapse" id="blocks" aria-expanded="false" style="height: 0px">
+                        <ul class="nav">
+                            <li>
+                                <a href="{{ route('admin.pages.index') }}"><p><i class="fa fa-angle-double-right"></i>Pages</p></a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -120,7 +131,7 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                {{ Auth::user()->fullName }} <b class="caret"></b>
+                                {{ Auth::user()->full_name }} <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ route('account') }}">Mon compte</a></li>

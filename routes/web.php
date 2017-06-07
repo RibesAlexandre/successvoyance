@@ -16,6 +16,12 @@ Route::get('/', ['uses' => 'SiteController@index', 'as' => 'home']);
 //  Connexion & Inscription
 Auth::routes();
 
+//  Utilisateurs non connectes
+Route::group(['middleware' => 'guest', 'namespace' => 'Auth'], function() {
+    Route::post('voyance-par-email/connexion', ['uses' => 'LoginController@signInTelling', 'as' => 'telling.signin']);
+    Route::post('voyance-par-email/inscription', ['uses' => 'RegisterController@SignUpTelling', 'as' => 'telling.signup']);
+});
+
 //  Espace membre
 Route::group(['prefix' => 'mon-compte', 'namespace' => 'Auth', 'middleware' => 'auth'], function() {
     Route::get('/', ['uses' => 'AccountController@index', 'as' => 'account']);
@@ -30,6 +36,19 @@ Route::group(['prefix' => 'mon-compte', 'namespace' => 'Auth', 'middleware' => '
     Route::post('/mon-mot-de-passe', ['uses' => 'AccountController@updatePassword', 'as' => 'account.password.update']);
     Route::post('/mes-preferences', ['uses' =>'AccountController@updatePrivacy', 'as' => 'account.privacy.update']);
     Route::post('mon-avatar', ['uses' => 'AccountController@updatePicture', 'as' => 'account.avatar.update']);
+
+    Route::get('mes-emails', ['uses' => 'AccountController@emails', 'as' => 'account.emails']);
+    Route::get('mes-emails/{identifier}', ['uses' => 'AccountController@email', 'as' => 'account.email']);
+    Route::post('mes-emails/reponse', ['uses' => 'AccountController@emailPost', 'as' => 'account.email.post']);
+});
+
+//  Utilisateurs
+Route::group(['prefix' => 'utilisateurs'], function() {
+    Route::get('/', ['uses' => 'UsersController@index', 'as' => 'users.index']);
+    Route::get('{id}', ['uses' => 'UsersController@show', 'as' => 'users.show']);
+    Route::get('{id}/commentaires', ['uses' => 'UsersController@comments', 'as' => 'users.comments']);
+    Route::get('{id}/messages', ['uses' => 'UsersController@posts', 'as' => 'users.posts']);
+    Route::get('{id}/conversations', ['uses' => 'UsersController@topics', 'as' => 'users.topics']);
 });
 
 //  Formulaire de contact
@@ -47,9 +66,11 @@ Route::post('newsletter/desinscription', ['uses' => 'SiteController@postUnsuscri
 Route::get('signes-astrologiques', ['uses' => 'SignsController@index', 'as' => 'signs.index']);
 Route::get('signes-astrologiques/{sign}', ['uses' => 'SignsController@show', 'as' => 'signs.show']);
 Route::get('signes-astrologiques/{sign}/horoscopes', ['uses' => 'SignsController@horoscopes', 'as' => 'signs.horoscopes']);
+Route::get('signes-astrologiques/{sign}/horoscopes/{slug}', ['uses' => 'SignsController@horoscope', 'as' => 'signs.horoscope']);
 
 //  Voyance
 Route::get('voyance-par-email', ['uses' => 'TellingController@email', 'as' => 'telling.email']);
+Route::post('voyance-par-email', ['uses' => 'TellingController@send', 'as' => 'telling.email.post']);
 Route::get('voyance-par-telephone', ['uses' => 'TellingController@phone', 'as' => 'telling.phone']);
 
 //  Voyants
@@ -65,6 +86,15 @@ Route::post('commentaire', ['uses' => 'CommentsController@store', 'as' => 'comme
 Route::put('commentaire/{id}', ['uses' => 'CommentsController@update', 'as' => 'comments.update']);
 Route::delete('commentaire/{id}', ['uses' => 'CommentsController@destroy', 'as' => 'comments.destroy']);
 
+//  Recrutement
+Route::get('recrutement', ['uses' => 'Sitecontroller@recruitment', 'as' => 'recruitment']);
+Route::post('recrutement', ['uses' => 'SiteController@postRecruitment', 'as' => 'recruitment.post']);
+
+//  Formulaire de paiement
+Route::post('paiment', ['uses'  =>  'PaymentController@process', 'as' => 'payment.process']);
+
+//  Pages crées manuellement
+Route::get('pages/{slug}', ['uses' => 'SiteController@page', 'as' => 'page']);
 //  Forums
 /*
 Route::group(['prefix' => 'forum', 'namespace' => 'Forum'], function() {
@@ -114,6 +144,22 @@ Route::group(['prefix' => 'dashboard-123', 'namespace' => 'Admin'], function() {
         'destroy'   =>  'admin.pages.destroy',
     ], 'except' => ['show']]);
 
+    /**
+     * Offres de voyance par email
+     */
+    Route::resource('voyance-emails', 'EmailsController', ['names' => [
+        'index'     =>  'admin.emails.index',
+        'edit'      =>  'admin.emails.edit',
+        'update'    =>  'admin.emails.update',
+        'create'    =>  'admin.emails.create',
+        'store'     =>  'admin.emails.store',
+        'destroy'   =>  'admin.emails.destroy',
+    ], 'except' => ['show']]);
+
+    Route::get('voyance-emails/liste', ['uses' => 'EmailsController@all', 'as' => 'admin.emails.all']);
+    Route::get('voyance-emails/conversation/{identifier}', ['uses' => 'EmailsController@conversation', 'as' => 'admin.emails.conversation']);
+    Route::post('voyance-emails/conversation/{identifier}', ['uses' => 'EmailsController@response', 'as' => 'admin.emails.response']);
+
     /*
      * Signes & Horoscopes
      */
@@ -135,7 +181,9 @@ Route::group(['prefix' => 'dashboard-123', 'namespace' => 'Admin'], function() {
      */
     Route::get('users', ['uses' => 'UsersController@index', 'as' => 'admin.users.index']);
     Route::get('users/{id}', ['uses' => 'UsersController@show', 'as' => 'admin.users.show']);
-    Route::patch('users/{id}', ['uses' => 'UsersController@update', 'as' => 'admin.users.update']);
+    Route::put('users/{id}', ['uses' => 'UsersController@update', 'as' => 'admin.users.update']);
+    Route::get('newsletter', ['uses' => 'UsersController@newsletter', 'as' => 'admin.newsletter']);
+    Route::get('newsletter/dl', ['uses' => 'UsersController@download', 'as' => 'admin.newsletter.dl']);
 
     /**
      * Gestion des éléments du site

@@ -4,7 +4,7 @@
 @section('pageTitle', 'Laissez nous un message !')
 
 @push('breadcrumbs')
-<li>Contact</li>
+<li class="active">Contact</li>
 @endpush
 
 @section('content')

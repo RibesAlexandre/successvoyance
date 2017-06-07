@@ -9,9 +9,11 @@ var components = {
 		this.flipBox();
 		this.searchBox();
 		this.escapeKey();
+		//this.slimScroll();
 		this.slideToTop();
 		this.mobileSubMenu();
 		this.mobilePageMenu();
+		this.scrollTo();
 		
 		/*
 		if($("html").hasClass("chrome") && $("body").hasClass("smoothscroll")) {
@@ -250,6 +252,9 @@ var components = {
 		});
 	},
 	
+	/**
+	 * Box de rotation
+	 */
 	flipBox: function() {
 		if($('.box-flip').length > 0) {
 			
@@ -276,6 +281,14 @@ var components = {
 		}
 	},
 	
+	/**
+	 * Permet de charger des scripts JS de façon asynchrone
+	 *
+	 * DOESN'T WORKS
+	 *
+	 * @param scriptName
+	 * @param callback
+	 */
 	loadScript: function(scriptName, callback) {
 		
 		if (!this.argumebts[scriptName]) {
@@ -298,4 +311,131 @@ var components = {
 			callback();
 		}
 	},
+	
+	/**
+	 * SlimScroll
+	 */
+	slimScroll: function() {
+		var _container = $('.slimscroll');
+		
+		if(_container.length > 0) {
+			
+		//	this.loadScript(plugin_path + '/jquery.slimscroll.min.js', function() {
+				
+				//if($.slimScroll) {
+					
+					$('.slimscroll').each(function () {
+						
+						var height;
+						if ($(this).attr("data-height")) {
+							height = $(this).attr("data-height");
+						} else {
+							height = $(this).height();
+						}
+						
+						$(this).slimScroll({
+							size: 				$(this).attr("data-size") 							|| '5px',
+							opacity: 			$(this).attr("data-opacity") 						|| .6,
+							position: 			$(this).attr("data-position") 						|| 'right',
+							allowPageScroll:	false, // not working
+							disableFadeOut: 	false,
+							railVisible: 		true,
+							railColor: 			$(this).attr("data-railColor")						|| '#222',
+							railOpacity: 		$(this).attr("data-railOpacity") 					|| 0.05,
+							alwaysVisible: 		($(this).attr("data-alwaysVisible") != "false" 	? true : false),
+							railVisible: 		($(this).attr("data-railVisible")   != "false" 	? true : false),
+							color: 				$(this).attr("data-color")  						|| '#333',
+							wrapperClass: 		$(this).attr("data-wrapper-class") 				|| 'slimScrollDiv',
+							railColor: 			$(this).attr("data-railColor")  					|| '#eaeaea',
+							height: 			height
+						});
+						
+						
+						// Disable body scroll on slimscroll hover
+						if($(this).attr('disable-body-scroll') == 'true') {
+							
+							$(this).bind('mousewheel DOMMouseScroll', function(e) {
+								var scrollTo = null;
+								
+								if (e.type == 'mousewheel') {
+									scrollTo = (e.originalEvent.wheelDelta * -1);
+								}
+								else if (e.type == 'DOMMouseScroll') {
+									scrollTo = 40 * e.originalEvent.detail;
+								}
+								
+								if (scrollTo) {
+									e.preventDefault();
+									$(this).scrollTop(scrollTo + $(this).scrollTop());
+								}
+							});
+							
+						}
+						
+					});
+					
+				//}
+				
+			//});
+			
+		}
+	},
+	
+	wordCounter: function() {
+		$("textarea.word-count").on('keyup', function() {
+			var _t		= $(this),
+				words 	= this.value.match(/\S+/g).length,
+				_limit	= _t.attr('data-maxlength') || 200;
+			
+			if (words > parseInt(_limit)) {
+				
+				// Split the string on first 200 words and rejoin on spaces
+				var trimmed = _t.val().split(/\s+/, 200).join(" ");
+				// Add a space at the end to keep new typing making new words
+				_t.val(trimmed + " ");
+				
+			} else {
+				
+				var _data_info = _t.attr('data-info');
+				
+				if(_data_info == '' || _data_info == undefined) {
+					var _infoContainer = _t.next('div');
+					$('span', _infoContainer).text(words + '/' + _limit);
+				} else {
+					$('#' +_data_info).text(words + '/' + _limit);
+				}
+				
+				
+			}
+		});
+	},
+	
+	/**
+	 * Scroll TO
+	 * @param to
+	 * @param offset
+	 */
+	scrollTo: function() {
+		
+		$("a.scrollTo").bind("click", function(e) {
+			e.preventDefault();
+			
+			var href 	= $(this).attr('href'),
+				_offset	= $(this).attr('data-offset') || 0;
+			
+			if(href != '#' && href != '#top') {
+				$('html,body').animate({scrollTop: $(href).offset().top - parseInt(_offset)}, 800, 'easeInOutExpo');
+			}
+			
+			if(href == '#top') {
+				$('html,body').animate({scrollTop: 0}, 800, 'easeInOutExpo');
+			}
+		});
+		
+		$("#toTop").bind("click", function(e) {
+			e.preventDefault();
+			$('html,body').animate({scrollTop: 0}, 800, 'easeInOutExpo');
+		});
+		
+	}
 };

@@ -28,6 +28,12 @@ class InsertConfiguration extends Seeder
         ]);
 
         \App\Models\Config::create([
+            'key'   =>  'email',
+            'value' =>  'ribes.alexandre@gmail.com',
+            'type'  =>  'string',
+        ]);
+
+        \App\Models\Config::create([
             'key'   =>  'logo',
             'value' =>  asset('imgs/components/logo_dark.png'),
             'type'  =>  'string',

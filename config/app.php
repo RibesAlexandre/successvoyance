@@ -176,6 +176,7 @@ return [
         DevDojo\Chatter\ChatterServiceProvider::class,
         GrahamCampbell\Markdown\MarkdownServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
+        Laravel\Tinker\TinkerServiceProvider::class,
 
         /*
          * Application Service Providers...

@@ -15,9 +15,9 @@ class Soothsayer extends Model
 {
     use SoftDeletes, SoothsayerPresenter, Searchable;
 
-    protected $fillable = ['user_id', 'slug', 'nickname', 'code', 'phone', 'content', 'picture', 'stars', 'ratings', 'total_consultations', 'deleted_at'];
+    protected $fillable = ['slug', 'nickname', 'code', 'phone', 'content', 'picture', 'stars', 'ratings', 'total_consultations', 'created_at', 'updated_at', 'deleted_at'];
 
-    protected $dates = ['deleted_at'];
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     public $timestamps = false;
 
@@ -30,7 +30,7 @@ class Soothsayer extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->hasOne(User::class, 'soothsayer_id');
     }
 
     /**
@@ -84,6 +84,7 @@ class Soothsayer extends Model
     {
         return $this->hasOne(Comment::class)
             ->selectRaw('soothsayer_id, count(*) as aggregate')
+            ->whereNull('parent_id')
             ->groupBy('soothsayer_id');
     }
 }

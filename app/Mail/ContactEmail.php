@@ -34,7 +34,7 @@ class ContactEmail extends Mailable
      */
     public function build()
     {
-        return $this->replyTo($this->request->input('email'))->markdown('emails.contact')->with([
+        return $this->subject('Nouveau message sur Success Voyance !')->replyTo($this->request->input('email'))->markdown('emails.contact')->with([
             'email'     =>  $this->request->input('email'),
             'name'      =>  $this->request->input('name') . ($this->request->has('firstname') ? ' ' . $this->request->input('firstname') : ''),
             'content'   =>  $this->request->input('content'),

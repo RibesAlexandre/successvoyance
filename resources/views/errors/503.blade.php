@@ -1,47 +1,34 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Be right back.</title>
+@extends('layouts.app')
 
-        <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
+@section('title', 'Site en maintenance')
 
-        <style>
-            html, body {
-                height: 100%;
-            }
+@section('content')
+    <section class="text-center">
 
-            body {
-                margin: 0;
-                padding: 0;
-                width: 100%;
-                color: #B0BEC5;
-                display: table;
-                font-weight: 100;
-                font-family: 'Lato', sans-serif;
-            }
+        <h1 class="margin-bottom-20 size-30">{{ config('app.name') }} est en cours de maintenance</h1>
+        <p class="size-20 font-lato">Nous sommes en train de mettre à jour le site, n'hésitez pas à revenir d'ici quelques minutes ;)</p>
 
-            .container {
-                text-align: center;
-                display: table-cell;
-                vertical-align: middle;
-            }
+        <!-- socials -->
+        <a href="#" class="social-icon social-icon-sm social-facebook" title="Facebook">
+            <i class="icon-facebook"></i>
+            <i class="icon-facebook"></i>
+        </a>
 
-            .content {
-                text-align: center;
-                display: inline-block;
-            }
+        <a href="#" class="social-icon social-icon-sm social-twitter" title="Twitter">
+            <i class="icon-twitter"></i>
+            <i class="icon-twitter"></i>
+        </a>
 
-            .title {
-                font-size: 72px;
-                margin-bottom: 40px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="content">
-                <div class="title">Be right back.</div>
-            </div>
-        </div>
-    </body>
-</html>
+        <a href="#" class="social-icon social-icon-sm social-gplus" title="Google plus">
+            <i class="icon-gplus"></i>
+            <i class="icon-gplus"></i>
+        </a>
+
+        <a href="#" class="social-icon social-icon-sm social-linkedin" title="Linkedin">
+            <i class="icon-linkedin"></i>
+            <i class="icon-linkedin"></i>
+        </a>
+        <!-- /socials -->
+    </section>
+
+@endsection

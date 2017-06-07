@@ -27,8 +27,7 @@ class EditUserRequest extends FormRequest
             'name'          =>  'required|max:255',
             'firstname'     =>  'required|max:255',
             'email'         =>  'required|email|max:255',
-            'dob'           =>  'date_format:Y-m-d',
-            'password'      =>  'confirm|min:6',
+            'password'      =>  'nullable|confirm|min:6',
         ];
     }
 }

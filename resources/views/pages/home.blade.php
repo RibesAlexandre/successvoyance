@@ -31,12 +31,29 @@
         </div>
 
     </section>
-    <section class="callout-dark heading-title heading-arrow-bottom">
+    <section class="info-bar info-bar-color">
         <div class="container">
 
-            <div class="text-center">
-                <h3 class="size-30">Smarty Multipurpose Responsive Template</h3>
-                <p>We can't solve problems by using the same kind of thinking we used when we created them.</p>
+            <div class="row">
+
+                <div class="col-sm-4">
+                    <i class="glyphicon glyphicon-globe"></i>
+                    <h3>FREE SHIPPING &amp; RETURN</h3>
+                    <p>Free shipping on all orders over $99.</p>
+                </div>
+
+                <div class="col-sm-4">
+                    <i class="glyphicon glyphicon-usd"></i>
+                    <h3>MONEY BACK GUARANTEE</h3>
+                    <p>100% money back guarantee.</p>
+                </div>
+
+                <div class="col-sm-4">
+                    <i class="glyphicon glyphicon-flag"></i>
+                    <h3>ONLINE SUPPORT 24/7</h3>
+                    <p>Lorem ipsum dolor sit amet.</p>
+                </div>
+
             </div>
 
         </div>
@@ -82,7 +99,7 @@
                                         <div class="left">
                                             <div class="media">
                                                 <div class="media-left">
-                                                    <a href="#">
+                                                    <a href="{{ route('soothsayers.show', ['slug' => $c['slug']]) }}">
                                                         <img class="media-object" src="{{ asset('uploads/soothsayers/' . $c['picture']) }}" alt="{{ $c['nickname'] }}">
                                                     </a>
                                                 </div>
@@ -92,7 +109,7 @@
                                                         <li>{{ $c['favorites'] }} <i class="fa fa-star" data-toggle="tooltip" data-placement="bottom" title="{{ $c['favorites'] . ' ' . str_plural('utilisateur', $c['favorites']) .  ' l\'ont marqué en favori'  }}"> </i></li>
                                                         <li>{{ $c['total'] }} <i class="fa fa-eye" data-toggle="tooltip" data-placement="bottom" title="{{ $c['total'] . ' ' . str_plural('consultation', $c['total']) }}"></i></li>
                                                     </ul>
-                                                    <a href="{{ route('soothsayers.show', ['slug' => $c['slug']]) }}" alt="{{ $c['nickname'] }}"><h4 class="media-heading">{{ $c['nickname'] }}</a></h4>
+                                                    <a href="{{ route('soothsayers.show', ['slug' => $c['slug']]) }}" alt="{{ $c['nickname'] }}"><h4 class="media-heading">{{ $c['nickname'] }}</a> <div class="rating rating-{{ $c['rating'] }} size-20 margin-bottom-20 inline-block"></div></h4>
                                                     <p class="text-justify">{!! nl2br(stripslashes($c['content'])) !!}</p>
                                                 </div>
                                             </div>
@@ -100,16 +117,8 @@
                                     </div>
                                     <div class="col-md-3 contact">
                                         {{ $c['next_dispo_cb'] }} {{ $c['next_dispo_08'] }}
-                                        <div class="rating rating-{{ $c['rating'] }} size-28 margin-bottom-20"></div>
-                                        @if( $c['status_08'] )
-                                            <div class="label label-success"><i class="fa fa-phone"></i> {{ $c['phone'] }}</div>
-                                        @elseif( $c['status_cb'] )
-                                            <div class="label label-success"><i class="fa fa-phone"></i> {{ $c['phone'] }}</div>
-                                        @elseif( !$c['status_cb'] && ! $c['status_08'] )
-                                            <div class="label label-danger">Indisponible</div>
-                                        @else
-                                            <div class="label label-success"><i class="fa fa-phone"></i> {{ $c['phone'] }}</div>
-                                        @endif
+
+                                        @include('soothsayers.partials.status', ['c' => $c])
 
                                         @if( isset($c['tarif_cb']) && $c['tarif_cb'] != 0 )
                                             <div class="margin-top-20">
@@ -137,61 +146,31 @@
                     </ul>
                 </div>
                 <div class="col-md-3 hidden-sm">
-                    <h3 class="hidden-xs size-16 margin-bottom-10">Dernières Conversations</h3>
-                    <div class="tabs nomargin-top margin-bottom-60">
 
-                        <!-- tabs -->
-                        <ul class="nav nav-tabs nav-bottom-border nav-justified">
-                            <li class="active">
-                                <a href="#tab_1" data-toggle="tab">
-                                    Récentes
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#tab_2" data-toggle="tab">
-                                    Populaires
-                                </a>
-                            </li>
-                        </ul>
-
-                        <!-- tabs content -->
-                        <div class="tab-content margin-bottom-60 margin-top-30">
-                            <div id="tab_1" class="tab-pane active">
-                                @foreach( $topics as $t )
-                                    <div class="row tab-post"><!-- post -->
-                                        <div class="col-md-3 col-sm-3 col-xs-3">
-                                            <a href="blog-sidebar-left.html">
-                                                <img src="{{ $t->user->avatar() }}" width="50" alt="{{ $t->user->full_name }}" />
-                                            </a>
-                                        </div>
-                                        <div class="col-md-9 col-sm-9 col-xs-9">
-                                            <a href="blog-sidebar-left.html" class="tab-post-link">{{ $t->title }}</a>
-                                            <small>{{ $t->created_at }}</small>
-                                        </div>
-                                    </div>
-                                @endforeach
+                    @if( count($favorites) > 0 )
+                    <h3 class="hidden-xs size-16 margin-bottom-10">Mes voyant(e)s favori(e)s</h3>
+                    <ul class="soothsayers">
+                        @foreach( $favorites as $f )
+                        <li class="soothsayer border-box">
+                            <div class="media">
+                                <div class="media-left">
+                                    <a href="{{ route('soothsayers.show', ['slug' => $f['slug']]) }}" alt="{{ $f['nickname'] }}">
+                                        <img class="media-object width-40 img-circle" src="{{ asset('uploads/soothsayers/' . $f['picture']) }}" alt="{{ $f['nickname'] }}">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading">{{ $f['nickname'] }} <div class="rating rating-{{ $f['rating'] }} size-13"></div></h4>
+                                    <div class="size-18 text-left padding-bottom-10">@include('soothsayers.partials.status', ['c' => $f])</div>
+                                </div>
                             </div>
-                            <div id="tab_2" class="tab-pane">
-                                @foreach( $topicsHot as $t )
-                                    <div class="row tab-post"><!-- post -->
-                                        <div class="col-md-3 col-sm-3 col-xs-3">
-                                            <a href="blog-sidebar-left.html">
-                                                <img src="{{ $t->user->avatar() }}" width="50" alt="{{ $t->user->full_name }}" />
-                                            </a>
-                                        </div>
-                                        <div class="col-md-9 col-sm-9 col-xs-9">
-                                            <a href="blog-sidebar-left.html" class="tab-post-link">{{ $t->title }}</a>
-                                            <small>{{ $t->created_at }}</small>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
+                        </li>
+                        @endforeach
+                    </ul>
+                    @endif
 
                     <h3 class="hidden-xs size-16 margin-bottom-10">Derniers Commentaires</h3>
-                    <div class="nomargin-top margin-bottom-60">
-                        <div class="margin-bottom-60 margin-top-30">
+                    <div class="nomargin-top margin-bottom-30 border-box">
+                        <div class="margin-bottom-0 margin-top-10">
                             @foreach( $comments as $c )
                                 <div class="row tab-post"><!-- post -->
                                     <div class="col-md-3 col-sm-3 col-xs-3">
@@ -207,6 +186,73 @@
                             @endforeach
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <a href="{{ route('telling.email') }}" alt="Voyance par email !">
+                                <div class="box-icon box-icon-center box-icon-round box-icon-transparent box-icon-large box-icon-content box-voyance margin-bottom-30">
+                                    <div class="box-icon-title">
+                                        <i class="fa fa-exclamation"></i>
+                                        <h2>Contactez nos voyant(e)s !</h2>
+                                    </div>
+                                    <p>Des questions sur votre avenir ? N'hésitez pas à contacter nos voyant(e)s pour éclaircir vos craintes !</p>
+                                </div>
+                            </a>
+
+                        </div>
+                    </div>
+
+                        <h3 class="hidden-xs size-16 margin-bottom-10">Dernières Conversations</h3>
+                        <div class="tabs nomargin-top margin-bottom-0 border-box">
+
+                            <!-- tabs -->
+                            <ul class="nav nav-tabs nav-bottom-border nav-justified">
+                                <li class="active">
+                                    <a href="#tab_1" data-toggle="tab">
+                                        Récentes
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#tab_2" data-toggle="tab">
+                                        Populaires
+                                    </a>
+                                </li>
+                            </ul>
+
+                            <!-- tabs content -->
+                            <div class="tab-content margin-bottom-0 margin-top-10">
+                                <div id="tab_1" class="tab-pane active">
+                                    @foreach( $topics as $t )
+                                        <div class="row tab-post"><!-- post -->
+                                            <div class="col-md-3 col-sm-3 col-xs-3">
+                                                <a href="blog-sidebar-left.html">
+                                                    <img src="{{ $t->user->avatar() }}" width="50" alt="{{ $t->user->full_name }}" />
+                                                </a>
+                                            </div>
+                                            <div class="col-md-9 col-sm-9 col-xs-9">
+                                                <a href="blog-sidebar-left.html" class="tab-post-link">{{ $t->title }}</a>
+                                                <small>{{ Date::parse($t->created_at)->diffForHumans() }}</small>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <div id="tab_2" class="tab-pane">
+                                    @foreach( $topicsHot as $t )
+                                        <div class="row tab-post"><!-- post -->
+                                            <div class="col-md-3 col-sm-3 col-xs-3">
+                                                <a href="blog-sidebar-left.html">
+                                                    <img src="{{ $t->user->avatar() }}" width="50" alt="{{ $t->user->full_name }}" />
+                                                </a>
+                                            </div>
+                                            <div class="col-md-9 col-sm-9 col-xs-9">
+                                                <a href="blog-sidebar-left.html" class="tab-post-link">{{ $t->title }}</a>
+                                                <small>{{ Date::parse($t->created_at)->diffForHumans() }}</small>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
                 </div>
             </div>
 

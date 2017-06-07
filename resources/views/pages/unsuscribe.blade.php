@@ -1,9 +1,10 @@
 @extends('layouts.app')
 
 @section('title', 'Me désinscrire de la newsletter')
+@section('pageTitle', 'Me désinscrire de la newsletter')
 
 @push('breadcrumbs')
-<li><a href="{{ url('login') }}">Désinscription de la newsletter</a></li>
+<li class="active"><a href="{{ url('login') }}">Désinscription de la newsletter</a></li>
 @endpush
 
 @section('content')

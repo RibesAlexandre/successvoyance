@@ -20,6 +20,7 @@
                     <th class="text-center">#</th>
                     <th class="text-center">Nom</th>
                     <th class="text-center">Prénom</th>
+                    <th class="text-center">Voyant</th>
                     <th class="text-center">Adresse email</th>
                     <th class="text-center">Inscription</th>
                     <th class="text-center">Connexion</th>
@@ -31,6 +32,7 @@
                         <td class="text-center">{{ $user->id }}</td>
                         <td class="text-center">{{ $user->name }}</td>
                         <td class="text-center">{{ $user->firstname }}</td>
+                        <td class="text-center">{{ !is_null($user->soothsayer_id) ? $user->soothsayer->nickname : null}}</td>
                         <td class="text-center">{{ $user->email }}</td>
                         <td class="text-center">{{ $user->created }}</td>
                         <td class="text-center">{{ $user->connected }}</td>

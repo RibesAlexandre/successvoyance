@@ -35,9 +35,10 @@ class SoothsayersController extends Controller
     public function show($slug)
     {
         $soothsayer = Soothsayer::with('commentsCount')->with('favoritesCount')->where('slug', $slug)->firstOrFail();
-        $comments = Comment::with('user')->where('soothsayer_id', $soothsayer->id)->latest()->take(10)->get();
+        $comments = Comment::with('user', 'responses')->where('soothsayer_id', $soothsayer->id)->whereNull('parent_id')->latest()->take(10)->get();
+        $favorites = Auth::check() ? Auth::user()->favoritesSoothsayers()->pluck('soothsayers.id')->all() : [];
 
-        return view('soothsayers.show', compact('soothsayer', 'comments'))->with('favorites', Auth::user()->favoritesSoothsayers()->pluck('soothsayers.id')->all());
+        return view('soothsayers.show', compact('soothsayer', 'comments', 'favorites'));
     }
 
     /**
@@ -49,10 +50,11 @@ class SoothsayersController extends Controller
      */
     public function loadComments($id, Request $request)
     {
-        $comments = Comment::with('user')->where('soothsayer_id', $id)->skip($request->get('skip'))->take(10)->get();
+        $soothsayer = Soothsayer::findOrFail($id);
+        $comments = Comment::with('user')->where('soothsayer_id', $soothsayer->id)->whereNull('parent_id')->skip($request->get('skip'))->take(10)->get();
         return response()->json([
             'success'   =>  true,
-            'content'   =>  count($comments) > 0 ? view('components.comments.comments', compact('comments'))->render() : view('components.box_icon', ['icon' => 'fa-comments', 'title' => 'Aucun commentaire', 'content' => 'Il n\'y a plus de commentaires à charger.'])->render(),
+            'content'   =>  count($comments) > 0 ? view('components.comments.comments', compact('comments', 'soothsayer'))->render() : view('components.box_icon', ['icon' => 'fa-comments', 'title' => 'Aucun commentaire', 'content' => 'Il n\'y a plus de commentaires à charger.'])->render(),
             'href'      =>  route('soothsayers.comments', ['id' => $id]) . '?skip=' . ($request->get('skip') + count($comments)),
             'method'    =>  'before',
             'element'   =>  '#more-comments',

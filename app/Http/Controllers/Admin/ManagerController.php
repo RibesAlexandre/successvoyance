@@ -20,6 +20,7 @@ use App\Http\Controllers\Controller;
 //  Utils
 use DB;
 use Date;
+use Cache;
 
 /**
  * Class ManagerController
@@ -109,6 +110,9 @@ class ManagerController extends Controller
             } else {
                 $move = Link::where('position', $direction, $element->position)->where('container', $element->container)->whereNull('parent_id')->orderBy('position', 'DESC')->first();
             }
+
+            Cache::pull('links_header');
+            Cache::pull('links_footer');
         } else if( $type == 'carousel' ) {
             $move = Carousel::where('position', $direction, $element->position)->orderBy('position', 'DESC')->first();
         }
@@ -243,7 +247,8 @@ class ManagerController extends Controller
     {
         $maxPosition = Link::select('id', 'position')->where('container', $request->input('container'))->orderBy('position', 'DESC')->first();
 
-        if( $request->has('parent_id') ) {
+        $parent = null;
+        if( $request->input('parent_id') != '0' && $request->input('parent_id') != 0 ) {
             $parent = Link::where('id', $request->input('parent_id'))->firstOrFail();
             if( !is_null($parent->parent_id) ) {
                 return response()->json([
@@ -260,8 +265,12 @@ class ManagerController extends Controller
             'slug'      =>  str_slug($request->input('name')),
             'link'      =>  $request->input('link'),
             'position'  =>  $maxPosition ? $maxPosition->position + 1 : 1,
-            'container' =>  $request->input('container')
+            'container' =>  $request->input('container'),
+            'parent_id' =>  is_null($parent) ? null : $parent->id,
         ]);
+
+        Cache::pull('links_header');
+        Cache::pull('links_footer');
 
         return response()->json([
             'success'   =>  true,
@@ -306,7 +315,11 @@ class ManagerController extends Controller
     public function editLink($id)
     {
         $link = Link::findOrFail($id);
-        $parents = Link::whereNull('parent_id')->where('id', '!=', $link->id)->orderBy('name', 'ASC')->pluck('name', 'id')->all();
+        $parents = [0 => 'Sélectionnez un parent'];
+        $parentsData = Link::whereNull('parent_id')->orderBy('position', 'ASC')->get();
+        foreach( $parentsData as $parent ) {
+            $parents[$parent->id] = $parent->name;
+        }
         return view('admin.manager.edit_link', compact('link', 'parents'))->with('containers', $this->linksContainer);
     }
 
@@ -325,7 +338,7 @@ class ManagerController extends Controller
     {
         $link = Link::findOrFail($id);
 
-        if( $request->has('parent_id') ) {
+        if( $request->input('parent_id') != '0' && $request->input('parent_id') != 0 ) {
             $parent = Link::where('id', $request->input('parent_id'))->firstOrFail();
             if( !is_null($parent->parent_id) ) {
                 return response()->json([
@@ -338,6 +351,9 @@ class ManagerController extends Controller
         }
 
         $link->update($request->all());
+
+        Cache::pull('links_header');
+        Cache::pull('links_footer');
 
         return response()->json([
             'success'   =>  true,

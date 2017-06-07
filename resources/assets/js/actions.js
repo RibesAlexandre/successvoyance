@@ -1,6 +1,6 @@
 var actions = {
 	init: function() {
-		
+		this.toogle();
 	},
 	
 	alert: function(message, type) {
@@ -10,5 +10,15 @@ var actions = {
 			var type = type;
 		}
 		toastr[type](message);
+	},
+	
+	toogle: function() {
+		$('body').on('click', '[data-action="toogle"]', function(e) {
+			e.preventDefault();
+			$.each('[data-view="toogle"]', function() {
+				$(this).fadeOut();
+			})
+			$('#' + $(this).attr('href')).fadeIn();
+		});
 	}
 };

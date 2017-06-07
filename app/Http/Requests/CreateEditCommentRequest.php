@@ -25,14 +25,14 @@ class CreateEditCommentRequest extends FormRequest
     {
         return [
             'content'   =>  'required|min:10',
-            'stars'     =>  'required'
+            'stars'     =>  'required_without:parent_id'
         ];
     }
 
     public function messages()
     {
         return [
-            'stars.required'    =>  'Vous devez attribuer une note au voyant pour continuer.'
+            'stars.required_without'    =>  'Vous devez attribuer une note au voyant pour continuer.'
         ];
     }
 }
