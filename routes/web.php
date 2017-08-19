@@ -115,7 +115,7 @@ Route::group(['prefix' => 'forum', 'namespace' => 'Forum'], function() {
 /**
  * Administration
  */
-Route::group(['prefix' => 'dashboard-123', 'namespace' => 'Admin'], function() {
+Route::group(['prefix' => 'dashboard-123', 'namespace' => 'Admin', 'middleware' => ['authorized', 'auth']], function() {
 //Route::group(['prefix' => 'dashboard-123', 'namespace' => 'Admin', 'middleware' => 'authorized'], function() {
 
     Route::get('/', ['uses' => 'DashBoardController@index', 'as' => 'admin.index']);
@@ -205,6 +205,7 @@ Route::group(['prefix' => 'dashboard-123', 'namespace' => 'Admin'], function() {
         Route::delete('carousels/{id}', ['uses' => 'ManagerController@destroyCarousel', 'as' => 'admin.manager.destroy_carousel']);
 
         Route::post('config', ['uses' => 'ManagerController@updateConfig', 'as' => 'admin.manager.update_config']);
+        Route::post('upload', ['uses' => 'ManagerController@uploadFile', 'as' => 'admin.manager.upload']);
     });
 
     //  Gestion des médias

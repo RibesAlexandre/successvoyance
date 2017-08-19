@@ -32,7 +32,18 @@ var app = {
 		$('body').on('click', submit, function(e) {
 			e.preventDefault();
 			
-			var f = $(form);
+			console.log($(this).attr('data-selector'));
+			
+			if( typeof $(this).attr('data-id') != typeof undefined && $(this).attr('data-id') != false && $(this).attr('data-id').length > 0 ) {
+				var f = $($(this).attr('data-selector')).parent('form');
+				submit = $(this).attr('data-selector');
+			} else {
+				var f = $(form);
+			}
+			
+			console.log(f);
+			console.log(submit);
+			
 			var formData = new FormData(f[0]);
 			
 			if( $('.' + f.attr('id') + '-errors').length > 0 ) {

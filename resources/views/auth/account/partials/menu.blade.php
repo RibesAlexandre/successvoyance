@@ -9,7 +9,7 @@
     @if( Auth::check() && Auth::id() == $user->id )
         <li class="list-group-item{{ active('account') }}"><a href="{{ route('account') }}"><i class="fa fa-eye"></i> Mon profil</a></li>
     @else
-        <li class="list-group-item"><a href="{{ route('account') }}"><i class="fa fa-eye"></i> Son profil</a></li>
+        <li class="list-group-item"><a href="{{ route('users.show', ['id' => $user->id]) }}"><i class="fa fa-eye"></i> Son profil</a></li>
     @endif
     <li class="list-group-item"><a href="{{ route('users.comments', ['id' => $user->id]) }}"><i class="fa fa-comments-o"></i> Commentaires</a></li>
     @if( Auth::check() && Auth::id() == $user->id )

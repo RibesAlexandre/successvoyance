@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\CreateEditBlockRequest;
 use App\Http\Requests\Admin\CreateEditCarouselRequest;
 
 //  Models
+use App\Http\Requests\Admin\StoreImageRequest;
 use App\Models\Config;
 use App\Models\Content\Link;
 use App\Models\Content\Page;
@@ -20,6 +21,7 @@ use App\Http\Controllers\Controller;
 //  Utils
 use DB;
 use Date;
+use File;
 use Cache;
 
 /**
@@ -42,6 +44,11 @@ class ManagerController extends Controller
         'footer'    =>  'Bas de page',
     ];
 
+    /**
+     * Accueil du Manager
+     *
+     * @return $this
+     */
     public function index()
     {
         $links = Link::orderByRaw('container ASC, position ASC')->whereNull('parent_id')->get();
@@ -49,9 +56,33 @@ class ManagerController extends Controller
         $blocks = Block::orderBy('id', 'DESC')->get();
         $config = Config::all();
 
+        $files = File::files(public_path('uploads/design'));
+        return view('admin.manager.index', compact('links', 'carousels', 'blocks', 'config', 'files'))->with('containers', $this->containers);
+    }
 
+    /**
+     * Upload d'une image
+     *
+     * @param StoreImageRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function uploadFile(StoreImageRequest $request)
+    {
+        $picture = $request->file('design_file');
+        $file = str_slug($request->input('design_name') . '-' . str_random(8)) . '.' . $picture->getClientOriginalExtension();
+        $picture->move(public_path('uploads/design'), $file);
 
-        return view('admin.manager.index', compact('links', 'carousels', 'blocks', 'config'))->with('containers', $this->containers);
+        return response()->json([
+            'success'   =>  true,
+            'content'   =>  view('admin.manager.partials.card_picture', compact('file'))->render(),
+            'element'   =>  '#cards_pictures',
+            'method'    =>  'append',
+            'to_clean'  =>  [
+                'design_name',
+                'design_file'
+            ],
+            'clean'     =>  true,
+        ]);
     }
 
     /**
@@ -200,12 +231,24 @@ class ManagerController extends Controller
         ]);
     }
 
+    /**
+     * Permet de récupérer les liens
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function link($id)
     {
         $link = Link::with('childrens')->where('id', $id)->firstOrFail();
         return view('admin.manager.link', compact('link'));
     }
 
+    /**
+     * Création d'un lien
+     *
+     * @param Request $request
+     * @return $this
+     */
     public function createLink(Request $request)
     {
         $link = new Link();
@@ -231,18 +274,34 @@ class ManagerController extends Controller
         return view('admin.manager.create_link', compact('link', 'pages', 'parents'))->with('containers', $this->linksContainer);
     }
 
+    /**
+     * Création d'un carousel
+     *
+     * @return $this
+     */
     public function createCarousel()
     {
         $carousel = new Carousel();
         return view('admin.manager.create_carousel', compact('carousel'))->with('containers', $this->containers);
     }
 
+    /**
+     * Création d'un block
+     *
+     * @return $this
+     */
     public function createBlock()
     {
         $block = new Block();
         return view('admin.manager.create_blocks', compact('block'))->with('containers', $this->containers);
     }
 
+    /**
+     * Sauvegarde d'un lien
+     *
+     * @param CreateEditLinkRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function storeLink(CreateEditLinkRequest $request)
     {
         $maxPosition = Link::select('id', 'position')->where('container', $request->input('container'))->orderBy('position', 'DESC')->first();
@@ -281,14 +340,21 @@ class ManagerController extends Controller
         ]);
     }
 
+    /**
+     * Sauvegarde d'un carousel
+     *
+     * @param CreateEditCarouselRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function storeCarousel(CreateEditCarouselRequest $request)
     {
         $inputs = $request->all();
         $maxPosition = Carousel::select('id', 'position')->orderBy('position', 'DESC')->first();
         if( $request->hasFile('picture') ) {
-            $pictureName = str_slug($request->input('title')) . Date::now()->parse('d-m-Y') . '.' . $request->file('picture')->getClientOriginalExtension();
+            $pictureName = str_slug($request->input('title')) . '-' . Date::now()->format('d-m-Y') . '.' . $request->file('picture')->getClientOriginalExtension();
             $request->file('picture')->move(public_path('uploads/carousels'), $pictureName);
-            $inputs = array_add($inputs, 'picture', $pictureName);
+            //$inputs = array_add($inputs, 'picture', $pictureName);
+            $inputs['picture'] = $pictureName;
         }
 
         if( $maxPosition ) {
@@ -373,9 +439,9 @@ class ManagerController extends Controller
             if( is_file(public_path('uploads/carousels/' . $carousel->picture)) ) {
                 unlink(public_path('uploads/carousels/' . $carousel->picture));
             }
-            $pictureName = str_slug($request->input('title')) . Date::now()->parse('d-m-Y') . '.' . $request->file('picture')->getClientOriginalExtension();
+            $pictureName = str_slug($request->input('title')) . Date::now()->format('d-m-Y') . '.' . $request->file('picture')->getClientOriginalExtension();
             $request->file('picture')->move(public_path('uploads/carousels'), $pictureName);
-            $inputs = array_add($inputs, 'picture', $pictureName);
+            $inputs['picture'] = $pictureName;
         }
 
         $carousel->update($inputs);

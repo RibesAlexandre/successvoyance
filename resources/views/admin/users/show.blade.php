@@ -50,6 +50,10 @@
                             <div class="col-md-6">
                                 {!! BootForm::select('Voyant associé', 'soothsayer_id', $soothsayers) !!}
                             </div>
+
+                            <div class="col-md-6">
+                                {!! BootForm::select('Rôle associé', 'roles[]', $roles)->multiple()->select($userRoles) !!}
+                            </div>
                         </div>
                         {!! BootForm::submit('Modifier le profil de l\'utilisateur', 'btn btn-success btn-block btn-fill')->id('btn-submit') !!}
                         {!! BootForm::close() !!}

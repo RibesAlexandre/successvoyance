@@ -29936,5 +29936,9 @@ h1.blog-post-title {
 .border-box.no-bottom {
   border-bottom: none;
 }
+.cover-home {
+  background-position: center center !important;
+  background-size: cover !important;
+}
 
 /*# sourceMappingURL=app.css.map */

@@ -151,7 +151,7 @@
         	div = $(this).attr('href');
         	$(div).slideToggle();
         });
-		app.submitForm('#form-response', '#submit-response', function() {
+		app.submitForm('.form-response', '.submit-response', function() {
 	        $(div).slideToggle();
 		});
     </script>

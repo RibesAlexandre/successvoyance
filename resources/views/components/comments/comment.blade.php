@@ -17,16 +17,19 @@
         <div class="media-body">
             <h4 class="media-heading size-14">
                 {{ !is_null($comment->user->soothsayer_id) ? $comment->user->soothsayer->nickname : $comment->user->full_name }} &ndash;
-                <span class="text-muted">{{ $comment->created_ago }}</span> &ndash;
+                <span class="text-muted">{{ $comment->created_ago }}</span>
+                @if( is_null($comment->user->soothsayer_id) )
+                &ndash;
                 <span class="size-14 text-muted">
-            @for( $i = 0; $i < 5; $i++ )
-                        @if( $i < $comment->stars)
-                            <i class="fa fa-star"></i>
-                        @else
-                            <i class="fa fa-star-o"></i>
-                        @endif
-                    @endfor
-            </span>
+                @for( $i = 0; $i < 5; $i++ )
+                    @if( $i < $comment->stars)
+                        <i class="fa fa-star"></i>
+                    @else
+                        <i class="fa fa-star-o"></i>
+                    @endif
+                @endfor
+                </span>
+                @endif
             </h4>
 
             <p id="comment_content_{{ $comment->id }}">
@@ -34,11 +37,11 @@
             </p>
 
             <div id="response_{{ $comment->id }}" style="display: none;">
-                {!! BootForm::open()->action(route('comments.store'))->post()->id('form-response') !!}
+                {!! BootForm::open()->action(route('comments.store'))->post()->id('form-response-' . $comment->id)->class('form-response')->data('id', $comment->id)->data('selector', '#form-response-' . $comment->id) !!}
                 {!! Form::hidden('parent_id', $comment->id) !!}
                 {!! Form::hidden('soothsayer_id', $soothsayer->id) !!}
                 {!! BootForm::textarea('Votre réponse', 'content') !!}
-                {!! BootForm::submit('Soumettre votre réponse')->id('submit-response')->class('btn btn-success') !!}
+                {!! BootForm::submit('Soumettre votre réponse')->id('submit-response-' . $comment->id)->class('btn btn-success submit-response')->data('id', $comment->id)->data('selector', '#submit-response-' . $comment->id) !!}
                 {!! BootForm::close() !!}
             </div>
 

@@ -34,15 +34,22 @@
             <!-- right -->
             <ul class="top-links list-inline pull-right">
                 @if( Auth::check() )
-                <li class="text-welcome">Bienvenue <strong>{{ Auth::user()->firstname }}</strong></li>
+                <li class="text-welcome">
+                    Bienvenue <strong>{{ Auth::user()->firstname }}</strong>
+                    @if( !is_null(Auth::user()->soothsayer_id) )
+                        &nbsp;&nbsp;(<a class="inline-block" href="{{ route('soothsayers.show', ['slug' => Auth::user()->soothsayer->slug]) }}" alt="{{ Auth::user()->soothsayer->nickname }}">{{ Auth::user()->soothsayer->nickname }}</a>)
+                    @endif
+                </li>
                 <li>
                     <a class="dropdown-toggle no-text-underline" data-toggle="dropdown" href="#"><i class="fa fa-user hidden-xs"></i> Mon compte</a>
                     <ul class="dropdown-menu">
-                        <li><a tabindex="-1" href="{{ route('account') }}"><i class="fa fa-user"></i>Accueil</a></li>
+                        <li><a href="{{ route('account') }}"><i class="fa fa-user"></i>Accueil</a></li>
+                        <li><a href="{{ route('account.edit') }}"><i class="fa fa-cog"></i>  Paramètres</a></li>
+                        <li><a href="{{ route('account.emails') }}"><i class="fa fa-paper-plane"></i> Emails Voyance</a></li>
+                        @if( Auth::user()->isRole('admin') || Auth::user()->isRole('voyant') )
                         <li class="divider"></li>
-                        <li><a tabindex="-1" href="{{ route('account.edit') }}"><i class="fa fa-cog"></i>  Paramètres</a></li>
-                        <li class="divider"></li>
-                        <li><a tabindex="-1" href="{{ route('account.emails') }}"><i class="fa fa-paper-plane"></i> Emails Voyance</a></li>
+                        <li><a href="{{ route('admin.index') }}"><i class="fa fa-dashboard"></i> Administration</a></li>
+                        @endif
                         <li class="divider"></li>
                         <li>
                             <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fa fa-sign-out"></i> Déconnexion</a>
@@ -69,7 +76,7 @@
 
             <form action="{{ route('search.post') }}" method="post">
                 {!! csrf_field() !!}
-                <input type="text" class="form-control" placeholder="Rechercher" />
+                <input type="text" name="search" class="form-control" placeholder="Rechercher" />
             </form>
         </div>
 
@@ -155,7 +162,7 @@
         <div class="row">
 
             <div class="col-md-3">
-                <img class="footer-logo width-200 center-block img-rounded img-thumbnail" src="{{ $cfg['logo'] }}" alt="{{ $cfg['name'] }}" />
+                <img class="footer-logo width-200 center-block" src="{{ asset('imgs/design/logo-blanc.png') }}" alt="{{ $cfg['name'] }}" />
 
                 <p>{{ $cfg['description'] }}</p>
             </div>

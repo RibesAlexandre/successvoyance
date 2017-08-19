@@ -4,12 +4,7 @@ namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-/**
- * Class CreateEditCarouselRequest
- * @author Alexandre Ribes
- * @package App\Http\Requests\Admin
- */
-class CreateEditCarouselRequest extends FormRequest
+class StoreImageRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,9 +24,15 @@ class CreateEditCarouselRequest extends FormRequest
     public function rules()
     {
         return [
-            'title'     =>  'max:255',
-            'begin_at'  =>  'before:ending_at',
-            'ending_at' =>  'after:begin_at',
+            'design_name'       =>  'required',
+            'design_file'       =>  'required|mimes:jpg,jpeg,png|max:400000'
+        ];
+    }
+
+    public function messages() {
+        return [
+            'design_name.required'      =>  'Le nom du média est recquis',
+            'design_file.required'      =>  'Le champ image est recquis',
         ];
     }
 }

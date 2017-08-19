@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\EditUserRequest;
 use App\Models\Newsletter;
+use App\Models\Role;
 use App\Models\Soothsayer;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -38,8 +39,10 @@ class UsersController extends Controller
         $user = User::findOrFail($id);
         $soothsayers = Soothsayer::pluck('nickname', 'id');
         $soothsayers->prepend('Sélectionnez un voyant');
+        $roles = Role::pluck('name', 'id');
+        $userRoles = $user->roles()->pluck('id')->all();
 
-        return view('admin.users.show', compact('user', 'soothsayers'));
+        return view('admin.users.show', compact('user', 'soothsayers', 'roles', 'userRoles'));
     }
 
     /**
@@ -58,6 +61,11 @@ class UsersController extends Controller
             $inputs['password'] = bcrypt($inputs['password']);
         } else {
             array_forget($inputs, 'password');
+        }
+
+        if( $request->has('roles') ) {
+            //$roles = $user->roles()->pluck('id')->all();
+            $user->roles()->sync($request->input('roles'));
         }
 
         $user->update($inputs);

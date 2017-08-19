@@ -30,9 +30,9 @@ class InsertAstrologicalsSigns extends Seeder
         ]);
 
         Sign::create([
-            'name'      =>  'Gémeaux',
+            'name'      =>  'Gémeau',
             'slug'      =>  'gemeau',
-            'logo'      =>  'gemeau.png',
+            'logo'      =>  'gemeaux.png',
             'begin_at'  =>  Carbon::createFromDate(2017, 5, 22),
             'ending_at' =>  Carbon::createFromDate(2017, 6, 21)
         ]);

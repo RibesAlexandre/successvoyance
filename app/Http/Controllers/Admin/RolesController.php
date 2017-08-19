@@ -117,6 +117,14 @@ class RolesController extends Controller
     public function destroy($id)
     {
         $role = Role::findOrFail($id);
+
+        if( $role->slug == 'admin' ) {
+            return response()->json([
+                'success'   =>  false,
+                'message'   =>  'Vous ne pouvez supprimer le rôle administrateur'
+            ]);
+        }
+
         $role->delete();
         return response()->json([
             'success'   =>  true,

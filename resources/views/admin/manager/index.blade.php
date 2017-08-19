@@ -34,6 +34,19 @@
                 </div>
             </div>
             <div class="tab-pane fade" id="images">
+                <div class="card" style="padding: 20px;">
+                    {!! BootForm::openHorizontal(['sm' => [4, 8],'lg' => [2, 10]])->action( route('admin.manager.upload') )->id('file-form')->post()->files() !!}
+                    {!! BootForm::text('Nom de l\'image', 'design_name') !!}
+                    {!! BootForm::file('Image à uploader', 'design_file') !!}
+                    {!! BootForm::submit('Uploader l\'image', 'btn btn-success btn-block btn-fill')->id('btn-file') !!}
+                    {!! BootForm::close() !!}
+                </div>
+
+                <div class="row" id="cards_pictures">
+                @foreach( $files as $file )
+                    @include('admin.manager.partials.card_picture')
+                @endforeach
+                </div>
             </div>
             <div class="tab-pane fade" id="manager">
                 <div class="card" style="padding: 20px;">
@@ -93,7 +106,7 @@
                                     <tbody>
                                     @forelse( $carousels as $c )
                                         <tr id="carousel_{{ $c->id }}">
-                                            <td class="text-center">{{ $c->picture() }}</td>
+                                            <td class="text-center"><img src="{{ $c->picture() }}" class="img-responsive width-30 center-block"></td>
                                             <td class="text-center">{{ $c->title }}</td>
                                             <td class="text-center"><a href="{{ $c->link }}" target="_blank">{{ str_limit($c->link, 20) }}</a></td>
                                             <td class="text-center">{{ $c->begin }}</td>
@@ -171,6 +184,7 @@
 @section('js')
     <script>
         app.orderLinks();
+		app.submitForm('#file-form', '#btn-file');
         app.submitForm('#config-form', '#btn-submit');
     </script>
 @endsection

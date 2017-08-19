@@ -1,29 +1,35 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ContactRequest;
-use App\Http\Requests\NewsletterRequest;
-use App\Http\Requests\RecruitmentRequest;
-use App\Http\Requests\SearchRequest;
-use App\Http\Requests\UnsuscribeNewsletterRequest;
-use App\Mail\ContactEmail;
-use App\Models\AstrologicalSign;
-use App\Models\Comment;
-use App\Models\Content\Page;
-use App\Models\Newsletter;
-use App\Models\Recruitment;
-use DevDojo\Chatter\Models\Discussion;
-use DevDojo\Chatter\Models\Post;
-use Utils;
-use Audiotel;
-use App\Models\Soothsayer;
-use Illuminate\Http\Request;
-
+//  Laravel
+use App\Models\Content\Carousel;
 use Auth;
 use Mail;
 use Date;
 use Cache;
+
+//  Services
+use Utils;
+use Audiotel;
+
+//  Emails
+use App\Mail\ContactEmail;
+
+//  Models
+use App\Models\Comment;
+use App\Models\Soothsayer;
+use App\Models\Newsletter;
+use App\Models\Recruitment;
+use App\Models\Content\Page;
+use App\Models\AstrologicalSign;
+use DevDojo\Chatter\Models\Discussion;
+
+//  Requests
+use App\Http\Requests\SearchRequest;
+use App\Http\Requests\ContactRequest;
+use App\Http\Requests\NewsletterRequest;
+use App\Http\Requests\RecruitmentRequest;
+use App\Http\Requests\UnsuscribeNewsletterRequest;
 
 /**
  * Class SiteController
@@ -42,9 +48,13 @@ class SiteController extends Controller
     public function index()
     {
         $soothsayers = [];
+        $soothsayersData = Soothsayer::with('commentsCount', 'favoritesCount')->get();
+
+        /*
         $soothsayersData = Cache::remember('soothsayers_index', 10, function() {
             return Soothsayer::with('commentsCount', 'favoritesCount')->get();
         });
+        */
 
         foreach( $soothsayersData as $s ) {
             $soothsayers[$s->slug] = [
@@ -75,7 +85,8 @@ class SiteController extends Controller
                             'slug'      =>  str_slug($c->pseudo),
                             'nickname'  =>  $c->pseudo,
                             'content'   =>  strlen($c->desc_audiotel) > 0 ? $c->desc_audiotel : $c->desc_cb,
-                            'phone'     =>  $c->phone,
+                            //'phone'     =>  $c->phone,
+                            'phone'     =>  '0892235577',
                             'code'      =>  strlen($c->code_direct) > 0 ? $c->code_direct : null,
                         ];
 
@@ -99,8 +110,13 @@ class SiteController extends Controller
                             'nickname'  =>  $c->pseudo,
                             //'stars'     =>  0,
                             //'ratings'   =>  0,
+                            'slug'      =>  str_slug($c->pseudo),
                             'rating'    =>  0,
                             'picture'   =>  end($picturePath),
+                            'comments'  =>  0,
+                            'favorites' =>  0,
+                            'total'     =>  0,
+                            'content'   =>  strlen($c->desc_audiotel) > 0 ? $c->desc_audiotel : $c->desc_cb,
                         ];
                     } else {
                         //  On sauvegarde la photo, au cas où
@@ -112,7 +128,8 @@ class SiteController extends Controller
                             file_put_contents(public_path('uploads/soothsayers/' . end($pictureExplode)), file_get_contents($c->photo));
 
                             $soothsayer->update([
-                                'phone'     =>  $c->phone,
+                                //'phone'     =>  $c->phone,
+                                'phone'     =>  '0892235577',
                                 'content'   =>  strlen($c->desc_audiotel) > 0 ? $c->desc_audiotel : $c->desc_cb,
                                 'code'      =>  strlen($c->code_direct) > 0 ? $c->code_direct : null,
                                 'picture'   =>  end($pictureExplode),
@@ -185,7 +202,8 @@ class SiteController extends Controller
             }
         }
 
-        return view('pages.home', compact('comments', 'topics', 'topicsHot', 'favorites'))->with('consultants', $this->consultants);
+        $slides = Carousel::where('begin_at', '<=', Date::now())->where('ending_at', '>=', Date::now())->enabled()->orderBy('position', 'ASC')->get();
+        return view('pages.home', compact('comments', 'topics', 'topicsHot', 'favorites', 'slides'))->with('consultants', $this->consultants);
     }
 
     /**
@@ -350,6 +368,6 @@ class SiteController extends Controller
             ]);
         }
 
-        return view('pages.search', compact('pages', 'soothsayers', 'astrologicalsSigns'))->with('searched', true);
+        return view('pages.search', compact('pages', 'soothsayers', 'astrologicalSigns'))->with('searched', true);
     }
 }

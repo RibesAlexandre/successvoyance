@@ -7,14 +7,80 @@
 @endsection
 
 @section('content')
-    <section class="height-500" id="slider" style="background:url({{ $cfg['cover_home'] }})">
-        <div class="overlay dark-6"></div>
 
+    @if( count($slides) > 1 )
+    <section id="slider" class="height-400 cover-home">
+        <div class="swiper-container" data-effect="slide" data-autoplay="true">
+            <div class="swiper-wrapper">
+
+                @foreach( $slides as $slide )
+                    <div class="swiper-slide cover-home" style="background-image: url('{{ $slide->picture() }}');">
+                        @if( !is_null($slide->title) && !is_null($slide->content) )
+                            <div class="overlay dark-6"></div>
+                        @endif
+
+                        <div class="display-table">
+                            <div class="display-table-cell vertical-align-middle">
+                                <div class="container">
+
+                                    <div class="row">
+                                        <div class="text-center col-md-8 col-xs-12 col-md-offset-2">
+
+                                            @if( !is_null($slide->title) )
+                                            <h1 class="bold font-raleway wow fadeInUp" data-wow-delay="0.4s">{{ $slide->title }}</h1>
+                                            @endif
+                                            @if( !is_null($slide->content) )
+                                            <p class="lead font-lato weight-300 hidden-xs wow fadeInUp" data-wow-delay="0.6s">{{ $slide->content }}</p>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                @endforeach
+            </div>
+
+            <div class="swiper-pagination"></div>
+
+            <div class="swiper-button-next"><i class="icon-angle-right"></i></div>
+            <div class="swiper-button-prev"><i class="icon-angle-left"></i></div>
+        </div>
+
+    </section>
+    @elseif( count($slides) == 1 )
+        @foreach( $slides as $slide )
+        <section class="height-400 cover-home" id="slider" style="background:url({{ $slide->picture() }})">
+            @if( !is_null($slide->title) && !is_null($slide->content) )
+            <div class="overlay dark-6"></div>
+            @endif
+            <div class="display-table">
+                <div class="display-table-cell vertical-align-middle">
+                    <div class="container text-center">
+                        @if( !is_null($slide->title) )
+                        <h1 class="nomargin wow fadeInUp" data-wow-delay="0.4s">
+                            {{ $slide->title }}
+                        </h1>
+                        @endif
+
+                        @if( !is_null($slide->content) )
+                        <p class="lead font-lato size-30 wow fadeInUp margin-top-80" data-wow-delay="0.7s">
+                            {{ $slide->content }}
+                        </p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </section>
+        @endforeach
+    @else
+    <section class="height-400 cover-home" id="slider" style="background:url({{ $cfg['cover_home'] }})">
+        <div class="overlay dark-6"></div>
         <div class="display-table">
             <div class="display-table-cell vertical-align-middle">
-
                 <div class="container text-center">
-
                     <h1 class="nomargin wow fadeInUp" data-wow-delay="0.4s">
                         {{ $cfg['name'] }}
                     </h1>
@@ -24,13 +90,12 @@
                     </p>
 
                     <a class="btn btn-default btn-lg" href="#">En savoir plus</a>
-
                 </div>
-
             </div>
         </div>
-
     </section>
+    @endif
+
     <section class="info-bar info-bar-color">
         <div class="container">
 
@@ -116,8 +181,6 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3 contact">
-                                        {{ $c['next_dispo_cb'] }} {{ $c['next_dispo_08'] }}
-
                                         @include('soothsayers.partials.status', ['c' => $c])
 
                                         @if( isset($c['tarif_cb']) && $c['tarif_cb'] != 0 )
@@ -168,10 +231,11 @@
                     </ul>
                     @endif
 
+                    @if( count($comments) > 0)
                     <h3 class="hidden-xs size-16 margin-bottom-10">Derniers Commentaires</h3>
                     <div class="nomargin-top margin-bottom-30 border-box">
                         <div class="margin-bottom-0 margin-top-10">
-                            @foreach( $comments as $c )
+                            @forelse( $comments as $c )
                                 <div class="row tab-post"><!-- post -->
                                     <div class="col-md-3 col-sm-3 col-xs-3">
                                         <a href="{{ $c->url() }}">
@@ -183,9 +247,12 @@
                                         <small>{{ $c->created_ago }}</small>
                                     </div>
                                 </div>
-                            @endforeach
+                            @empty
+                            <p class="text-center">Aucun commentaire</p>
+                            @endforelse
                         </div>
                     </div>
+                    @endif
 
                     <div class="row">
                         <div class="col-sm-12">
@@ -202,6 +269,7 @@
                         </div>
                     </div>
 
+                        @if( count($topics) > 0 && count($topicsHot) > 0 )
                         <h3 class="hidden-xs size-16 margin-bottom-10">Dernières Conversations</h3>
                         <div class="tabs nomargin-top margin-bottom-0 border-box">
 
@@ -253,6 +321,7 @@
                                 </div>
                             </div>
                         </div>
+                        @endif
                 </div>
             </div>
 

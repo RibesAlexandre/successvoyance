@@ -46,25 +46,48 @@ class HasPermission
         $actions = explode('.', $request->route()->getName());
 
         if( !in_array($request->route()->getName(), ['admin.index']) ) {
-            $authorization = $actions[2] . '_' . $actions[1];
 
-            if( !$this->auth->user()->isAuthorized($authorization) ) {
-                if( $this->auth->user()->isAuthorized($this->authorizedActions[$actions[2]] . '_' . $actions[1]) && array_key_exists($actions[2], $this->authorizedActions)  ) {
-                    return $next($request);
-                } else {
-                    if( $request->ajax() ) {
-                        return response()->json([
-                            'success'   =>  'false',
-                            'alert'     =>  true,
-                            'message'   =>  'Vous n\'êtes pas autorisés à réaliser cette action',
-                        ]);
-                    } else {
-                        alert()->error('Vous n\'êtes pas autorisé à accéder à cette page', 'Accès interdit');
-                        return redirect()->route('admin.index');
-                    }
-                }
+            $actionOne = $actions[1];
+            $actionOne = str_replace('store', 'create', $actionOne);
+            $actionOne = str_replace('update', 'edit', $actionOne);
+
+            if( isset($actions[2]) ) {
+
+                $actionTwo = $actions[2];
+                $actionTwo = str_replace('store', 'create', $actionTwo);
+                $actionTwo = str_replace('update', 'edit', $actionTwo);
+
+                $authorization = $actionOne . '_' . $actionTwo;
             } else {
+                $authorization = $actionOne;
+            }
+
+            if( !$this->auth->check() ) {
+                if( $request->ajax() ) {
+                    return response()->json([
+                        'success'   =>  false,
+                        'alert'     =>  true,
+                        'message'   =>  'Vous devez être connecté pour accéder à cette page',
+                    ]);
+                } else {
+                    alert()->error('Vous devez être connecté pour pouvoir accéder à cette page');
+                    return redirect()->route('home');
+                }
+            }
+
+            if( $this->auth->user()->isAuthorized($authorization) ) {
                 return $next($request);
+            } else {
+                if( $request->ajax() ) {
+                    return response()->json([
+                        'success'   =>  'false',
+                        'alert'     =>  true,
+                        'message'   =>  'Vous n\'êtes pas autorisés à réaliser cette action',
+                    ]);
+                } else {
+                    alert()->error('Vous n\'êtes pas autorisé à accéder à cette page', 'Accès interdit');
+                    return redirect()->route('admin.index');
+                }
             }
         }
 

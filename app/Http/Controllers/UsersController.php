@@ -40,7 +40,8 @@ class UsersController extends Controller
                 $query->latest()->take(5)->get();
             }])
             ->where('id', $id)
-            ->first();
+            ->firstOrFail();
+
         return view('auth.account.index')->with('user', $user);
     }
 

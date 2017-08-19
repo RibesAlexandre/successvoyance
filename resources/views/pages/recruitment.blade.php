@@ -124,15 +124,6 @@
                         </div>
 
                     </form>
-
-                    <hr class="margin-top-60" />
-
-                    <div class="text-center margin-top-60">
-                        <i class="fa fa-phone fa-3x"></i>
-                        <h1 class="font-raleway nomargin">1800-123-456</h1>
-                        <span class="size-13 text-muted">Contactez nous !</span>
-                    </div>
-
                 </div>
             </div>
         </div>

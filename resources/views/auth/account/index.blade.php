@@ -36,7 +36,7 @@
                                     @forelse( $user->comments as $comment )
                                         <div class="clearfix margin-bottom-20">
                                             <img class="thumbnail pull-left" src="{{ $comment->user->avatar() }}" width="60" height="60" alt="{{ $comment->user->full_name }}" />
-                                            <h4 class="size-15 nomargin noborder nopadding bold"><a href="#">{{ $comment->user->full_name }}</a></h4>
+                                            <h4 class="size-15 nomargin noborder nopadding bold"><a href="{{ route('users.show', ['id' => $comment->user_id]) }}">{{ $comment->user->full_name }}</a></h4>
                                             <span class="size-13 text-muted">
                                             {!! str_limit(nl2br($comment->content, 100)) !!}
                                                 <span class="text-success size-11">{{ $comment->created_ago }}</span>
@@ -61,7 +61,7 @@
                                         <div class="clearfix margin-bottom-20">
                                             <div class="clearfix margin-bottom-10">
                                                 <img class="thumbnail pull-left" src="{{ $topic->user->avatar() }}" width="60" height="60" alt="{{ $topic->user->full_name }}" />
-                                                <h4 class="size-13 nomargin noborder nopadding"><a href="blog-single-default.html">{{ str_limit($topic->title, 50) }}</a></h4>
+                                                <h4 class="size-13 nomargin noborder nopadding"><a href="{{ route('users.show', ['id' => $topic->user_id]) }}">{{ str_limit($topic->title, 50) }}</a></h4>
                                                 <span class="size-11 text-muted">{{ Date::parse($topic->created_at)->diffForHumans() }}</span>
                                             </div><!-- /post item -->
                                         </div>
@@ -84,7 +84,7 @@
                                     @forelse( $user->posts as $post )
                                         <div class="clearfix margin-bottom-20">
                                             <img class="thumbnail pull-left" src="{{ $post->user->avatar() }}" width="60" height="60" alt="{{ $post->user->full_name }}" />
-                                            <h4 class="size-15 nomargin noborder nopadding bold"><a href="#">{{ $post->user->full_name }}</a></h4>
+                                            <h4 class="size-15 nomargin noborder nopadding bold"><a href="{{ route('users.show', ['id' => $post->user_id]) }}">{{ $post->user->full_name }}</a></h4>
                                             <span class="size-13 text-muted">
                                             {!! str_limit(nl2br($post->body, 200)) !!}
                                             <span class="text-success size-11">{{ Date::parse($post->created_at)->diffForHumans() }}</span> <span class="size-11">dans <a href="#">{{ $post->discussion->title }}</a></span>

@@ -35,7 +35,7 @@ class InsertConfiguration extends Seeder
 
         \App\Models\Config::create([
             'key'   =>  'logo',
-            'value' =>  asset('imgs/components/logo_dark.png'),
+            'value' =>  asset('imgs/design/logo.jpg'),
             'type'  =>  'string',
         ]);
 

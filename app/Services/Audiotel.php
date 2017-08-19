@@ -18,7 +18,7 @@ class Audiotel
      */
     public function getConsultantsJson($type = 'all', $status = 'all', $cb = 'all')
     {
-        $url = "https://api.audioservice.me/consultant/liste?&client=UXlWJwo1VmpRbgA8UncHMQEtWzIBZVpgUjFSdlw3USIDJlQ2DWNQOAE8Uj5VMQ%3D%3D&type_audiotel=" . $type . '&status_08=' . $status . '&status_cb=' . $cb;
+        $url = "https://api.audioservice.me/consultant/liste?&client=V38Gd11iBzsCPV1hV3JQZg4iUDlXMFlgUzgILAFqB3QAJVY0WDYDawA9B2tVMQ%3D%3D&type_audiotel=" . $type . '&status_08=' . $status . '&status_cb=' . $cb;
         $ch_rech = curl_init();
         curl_setopt($ch_rech, CURLOPT_URL, $url);
         curl_setopt($ch_rech, CURLOPT_HEADER, 0);
@@ -41,7 +41,7 @@ class Audiotel
      */
     public function getConsultationsByConsultant($nickname, $type = 'all', $date = null)
     {
-        $url = 'https://api.audioservice.me/consultation/planning_get_data?&user=Bi4PfgA%2FU29TbFNvVnMHMQcrVTxVaV4xDgJTYlRrWDMCNgBqCXRWaABhA2dQNFQhDmNVdQAhCmdUYFZoXWNWbQZn&consiltant=' . $nickname . '&type=' . $type . '&format=json';
+        $url = 'https://api.audioservice.me/consultation/planning_get_data?&user=VX1UJQ0yDDBUawY6BCFRZwIuAGlVaQhnVFgBMFdoVT4KPlU%2FWyZQblc1UDdQPFEkVjtXdwMiXDFQZAY4Az0DOFU0&consultant=' . $nickname . '&type=' . $type . '&format=json';
         if( !is_null($date) ) {
             $url .= '&date=' . $date;
         }

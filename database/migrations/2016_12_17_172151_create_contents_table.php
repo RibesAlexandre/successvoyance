@@ -82,6 +82,7 @@ class CreateContentsTable extends Migration
             $table->string('title');
             $table->string('link')->nullable()->default(null);
             $table->string('content')->nullable()->default(null);
+            $table->integer('position')->unsigned()->default(0);
             $table->string('picture')->nullable()->default(null);
             $table->string('begin_at')->nullable()->default(null);
             $table->string('ending_at')->nullable()->default(null);

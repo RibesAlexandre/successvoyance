@@ -49,4 +49,9 @@ trait SoothsayerPresenter
         $related = $this->getRelation('favoritesCount');
         return ($related) ? (int) $related->aggregate : 0;
     }
+
+    public function getPhoneAttribute($value)
+    {
+        return wordwrap(trim($value) , 2 , ' ' , true);
+    }
 }
